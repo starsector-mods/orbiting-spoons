@@ -1,0 +1,12 @@
+{
+    "id": "orbiting_spoons",
+    "name": "The Orbiting Spoon",
+    "author": "Anonymous",
+    "version": "1.1.0",
+    "gameVersion": "0.98a",
+    "description": "Adds 'The Orbiting Spoon', a portside galley and station mess hall with a custom graphical food menu UI, officer camaraderie, and regional Shore Leave buffs.",
+    "modPlugin": "data.campaign.OS_ModPlugin",
+    "jars": [
+        "jars/orbiting_spoons.jar"
+    ]
+}

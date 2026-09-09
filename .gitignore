@@ -1,0 +1,14 @@
+*.class
+.idea/
+*.iml
+bin/
+out/
+sources.txt
+.system_generated/
+.DS_Store
+Thumbs.db
+*.bak
+*.tmp
+*.old
+*.sav
+starsector.log*
