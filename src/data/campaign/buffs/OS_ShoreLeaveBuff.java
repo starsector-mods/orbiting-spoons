@@ -407,10 +407,8 @@ public class OS_ShoreLeaveBuff implements EveryFrameScript {
             return;
         }
 
-        // Ensure hint panel is clean (CampaignUIRenderingListener handles the HUD overlay)
-        if (activeHintSlot >= 0) {
-            clearCampaignHint();
-        }
+        // Keep the HUD overlay updated with Shore Leave duration
+        updateCampaignHint();
 
         // Throttle ship sync to once per second to maintain zero performance drag
         checkTimer += amount;
