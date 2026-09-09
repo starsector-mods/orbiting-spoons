@@ -48,5 +48,5 @@ public class OS_FullReviewDialogPlugin implements InteractionDialogPlugin {
     @Override
     public Object getContext() { return null; }
     @Override
-    public Map<String, MemoryAPI> getMemoryMap() { return null; }
+    public Map<String, MemoryAPI> getMemoryMap() { return new java.util.HashMap<String, MemoryAPI>(); }
 }
