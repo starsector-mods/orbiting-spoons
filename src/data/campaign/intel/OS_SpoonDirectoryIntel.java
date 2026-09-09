@@ -9,6 +9,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import com.fs.starfarer.api.Global;
+import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.campaign.SectorEntityToken;
 import com.fs.starfarer.api.campaign.comm.IntelInfoPlugin;
 import com.fs.starfarer.api.campaign.comm.IntelManagerAPI;
@@ -58,6 +59,7 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
     private DirectoryTab activeTab = DirectoryTab.REGISTRY;
     private transient Boolean lastBuffActive = null;
     private transient String lastBuffFaction = null;
+    private transient boolean checkedLegacyIntel = false;
 
     public static void addIntelIfNeeded() {
         if (Global.getSector() == null || Global.getSector().getIntelManager() == null) return;
@@ -70,8 +72,9 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
     }
 
     /** Called by Java deserialization - ensures fields added after initial release get sane defaults. */
-    private Object readResolve() {
+    protected Object readResolve() {
         if (activeTab == null) activeTab = DirectoryTab.REGISTRY;
+        checkedLegacyIntel = false;
         return this;
     }
 
@@ -79,15 +82,10 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
     protected void advanceImpl(float amount) {
         super.advanceImpl(amount);
 
-        // Ensure OS_SpoonDirectoryIntel is the ONLY intel item spawned by this mod; purge Shore Leave intel logs
-        if (Global.getSector() != null && Global.getSector().getIntelManager() != null) {
-            IntelManagerAPI im = Global.getSector().getIntelManager();
-            List<IntelInfoPlugin> shoreLeaveIntels = im.getIntel(OS_ShoreLeaveIntel.class);
-            if (shoreLeaveIntels != null && !shoreLeaveIntels.isEmpty()) {
-                for (IntelInfoPlugin item : new ArrayList<>(shoreLeaveIntels)) {
-                    im.removeIntel(item);
-                }
-            }
+        // Ensure OS_SpoonDirectoryIntel is the ONLY intel item spawned by this mod; purge Shore Leave intel once per session
+        if (!checkedLegacyIntel) {
+            checkedLegacyIntel = true;
+            OS_ShoreLeaveIntel.cleanupLegacyIntel();
         }
 
         // Notify intel log when morale state changes
@@ -126,7 +124,7 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
             SectorEntityToken player = Global.getSector().getPlayerFleet();
             float distLY = 0f;
             boolean inSys = false;
-            if (player != null) {
+            if (player != null && player.getLocationInHyperspace() != null && m.getPrimaryEntity() != null && m.getPrimaryEntity().getLocationInHyperspace() != null) {
                 inSys = player.getStarSystem() != null && player.getStarSystem() == m.getStarSystem();
                 if (inSys) {
                     distLY = 0f;
@@ -135,8 +133,8 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
                 }
             }
             String distStr = inSys ? "in-system" : String.format("%.1f LY away", distLY);
-            String factionShort = getShortFactionName(m.getFactionId(), m.getFaction().getDisplayName());
-            Color factionColor = m.getFaction().getBaseUIColor();
+            String factionShort = m.getFaction() != null ? getShortFactionName(m.getFactionId(), m.getFaction().getDisplayName()) : "Independent";
+            Color factionColor = getFactionColorSafe(m);
 
             LabelAPI b1 = info.addPara("Nearest diner: " + m.getName() + " (" + factionShort + ", " + distStr + ")", pad);
             b1.setHighlight(m.getName(), factionShort, distStr);
@@ -359,7 +357,7 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
                 entry.dishName = getSignatureDish(factionId);
                 entry.price = getDishPrice(factionId);
 
-                if (player != null) {
+                if (player != null && player.getLocationInHyperspace() != null && market.getPrimaryEntity() != null && market.getPrimaryEntity().getLocationInHyperspace() != null) {
                     boolean sameSystem = player.getStarSystem() != null && player.getStarSystem() == market.getStarSystem();
                     entry.inSystem = sameSystem;
                     if (sameSystem) {
@@ -402,9 +400,9 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
         for (SpoonDinerEntry entry : diners) {
             MarketAPI m = entry.market;
             String sysName = m.getStarSystem() != null ? m.getStarSystem().getBaseName() : "Deep Space";
-            Color factionColor = m.getFaction().getBaseUIColor();
-            Color colonyColor = m.getFaction().getBaseUIColor();
-            String factionDisplay = getShortFactionName(m.getFactionId(), m.getFaction().getDisplayName());
+            Color factionColor = getFactionColorSafe(m);
+            Color colonyColor = factionColor;
+            String factionDisplay = m.getFaction() != null ? getShortFactionName(m.getFactionId(), m.getFaction().getDisplayName()) : "Independent";
             String priceStr = entry.price + " credits";
 
             String distStr;
@@ -464,7 +462,7 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
         // 1. Sindrian Diktat
         addReviewCard(info, opad, spad,
             "[No Transponders: Cruorian Reeds] Sindrian Diktat: Volturnian Lobster Feast (600 credits)",
-            Global.getSector().getFaction("sindrian_diktat").getBaseUIColor(),
+            getFactionColorSafe("sindrian_diktat"),
             "Volturnian blue-shell lobster poached in fiery clarified pepper butter, served beneath glowing banners of the Lion's Guard. The meat is sweet, tender, and dripping in decadent fat. The catch? It takes thirty patrol cutters burning military-grade fuel to keep poachers from ever touching the reefs. Every bite is seasoned with the bitter sweat of Askonia's dockworkers and the paranoia of an authoritarian petrol-state. Pure, unadulterated decadence.",
             "Rating: 4.5 / 5 Spoons - \"Eat like a tyrant before the fuel tanks blow.\"",
             "Bones's Field Rule: \"Never eat shellfish on a station where the security guards look twitchy. If the local ratings are eating turnip mash, you order turnip mash.\""
@@ -473,7 +471,7 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
         // 2. Luddic Church
         addReviewCard(info, opad, spad,
             "[Sectors Unknown: Gilead's Breadbasket] Luddic Church: Pilgrim's Hearth Harvest Feast (200 credits)",
-            Global.getSector().getFaction("luddic_church").getBaseUIColor(),
+            getFactionColorSafe("luddic_church"),
             "Real bread. Real stone-ground barley. Real butter churned by human hands on Gilead, served in a quiet station refectory over solemn prayers of thanks. No chemical synthesizers, no nutrient paste, no corporate bullshit. Taking a bite of warm crumb that grew in honest soil will make even the most hardened Tri-Tachyon mercenary stare at the floor and reconsider their life choices. In a dying sector, this is holy.",
             "Rating: 5.0 / 5 Spoons - \"Church for your stomach. Amen.\"",
             "Bones's Field Rule: \"If the bread is holy, don't argue with the deacons. Chew slow, shut your mouth, and leave a modest tithe in the wooden bowl.\""
@@ -482,7 +480,7 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
         // 3. Persean League
         addReviewCard(info, opad, spad,
             "[A Cook's Burn: Kazeron's Terraces] Persean League: Archon's Grand Mezze Banquet (350 credits)",
-            Global.getSector().getFaction("persean").getBaseUIColor(),
+            getFactionColorSafe("persean"),
             "Crisp flatbread, rosemary-rubbed waterfowl skewers, and chilled citrus liqueur served on glazed earthenware behind linen awnings. It is breezy, fragrant, and meticulously refined to stroke the egos of independent merchant factors while they haggle over tariff exemptions. A bit pretentious, but the citrus cut through engine grease like nothing else in the Core.",
             "Rating: 4.0 / 5 Spoons - \"Good diplomacy on an empty stomach.\"",
             "Bones's Field Rule: \"Sip the citrus wine, laugh at the oligarch's terrible jokes, and make sure your nav-officer checks the docking tariff fine print before the second course.\""
@@ -491,7 +489,7 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
         // 4. Independents
         addReviewCard(info, opad, spad,
             "[Galley Confidential: The 24-Hour Airlock] Independents: Loaded Spacer's Full-Burn Set (200 credits)",
-            Global.getSector().getFaction("independent").getBaseUIColor(),
+            getFactionColorSafe("independent"),
             "The eternal backbone of the void. Battered blue Domain fabricator, cracked vinyl booths, thick root-vegetable beef stew, a stack of hot waffles slathered in butter, and scalded coffee. It's what freelance haulers, asteroid miners, and war-weary captains have been eating since the Collapse. Honest, greasy, and guaranteed to carry your crew through three consecutive hyperspace burns.",
             "Rating: 4.0 / 5 Spoons - \"Old reliable. The grease holds the void together.\"",
             "Bones's Field Rule: \"The uglier the diner and the more dented the dispenser chute, the better the waffles. If the counter stool doesn't wobble, you're on the wrong station.\""
@@ -500,7 +498,7 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
         // 5. Tri-Tachyon
         addReviewCard(info, opad, spad,
             "[Sectors Unknown: Port Tse Corporate Lounge] Tri-Tachyon: Executive Synth-Steak Suite (450 credits)",
-            Global.getSector().getFaction("tritachyon").getBaseUIColor(),
+            getFactionColorSafe("tritachyon"),
             "A sterile, terrifying miracle of bio-molecular synthesis. Zero connective tissue, mathematically perfect fat-marbling, and laser-seared in an acoustic-damped lounge while glowing corporate tickers blink over your head. It tastes like whatever quarterly profit margin Tri-Tachyon's algorithmic flavor-models decided you wanted to taste. It's paired with nootropics that make you want to sign a non-disclosure agreement. Clean, expensive, and completely devoid of humanity.",
             "Rating: 3.5 / 5 Spoons - \"Don't ask what culture vat it came from.\"",
             "Bones's Field Rule: \"If a Tri-Tachyon food engineer tells you a meat cut is 'conceptually delicious and biochemically optimized', do not sign the receipt.\""
@@ -509,7 +507,7 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
         // 6. Hegemony
         addReviewCard(info, opad, spad,
             "[The Nasty Chits: Chicomoztoc Gantry Mess] Hegemony: Commissary Auxiliary Rations (150 credits)",
-            Global.getSector().getFaction("hegemony").getBaseUIColor(),
+            getFactionColorSafe("hegemony"),
             "Dense hardtack that could plug a hull breach, and a bowl of iron-soy sludge hot enough to strip paint off a bulkhead. It has no garlic, no pepper, no joy, and precisely the caloric density demanded by High Hegemon naval ordinance 44-A. It tastes like grey primer and obedience. Eat it with black chicory coffee before a twelve-hour patrol shift. It won't warm your soul, but your weapons officer won't faint at the tactical console either.",
             "Rating: 2.5 / 5 Spoons - \"Eat it standing up. Tastes like martial law.\"",
             "Bones's Field Rule: \"Never complain about the hardtack to the cook. The cook has a wrench, an apron covered in soy broth, and friends in the military police.\""
@@ -518,7 +516,7 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
         // 7. Pirates
         addReviewCard(info, opad, spad,
             "[No Transponders: Donkers Salvage Yards] Pirates: Fringe Scavenger Platter (100 credits)",
-            Global.getSector().getFaction("pirates").getBaseUIColor(),
+            getFactionColorSafe("pirates"),
             "Mystery ribs charred over open engine manifolds, drowned in peppery fungal sludge to cover up the rot, slammed onto sheet metal next to moonshine that could dissolve your shields. Scarred corsairs kick the machine when it jams and roll dice for the scraps. You will experience either profound animal euphoria or catastrophic gastrointestinal failure within forty minutes. Roll the dice, spacer.",
             "Rating: 2.0 / 5 Spoons - \"Hazard pay required. I loved every filthy bite.\"",
             "Bones's Field Rule: \"Keep your back to the bulkhead, your sidearm thumb-break unclasped, and never ask what animal had four ribs that thick.\""
@@ -527,7 +525,7 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
         // 8. Luddic Path
         addReviewCard(info, opad, spad,
             "[Sectors Unknown: Cell Bunker Galley] Luddic Path: Ascetic Penance Broth (50 credits)",
-            Global.getSector().getFaction("luddic_path").getBaseUIColor(),
+            getFactionColorSafe("luddic_path"),
             "Tastes like crushed gravel simmered in uncalibrated reactor runoff. The cell fighters hammer off the fabricator's seasoning injectors with chisels because pleasure is a sin of the Machine. Salt is considered an unholy distraction from holy martyrdom. If their torpedo aim was as crude as this turnip mash, the Sector would finally have peace. Buy it only if you are twenty light-years out of fuel and facing active starvation.",
             "Rating: 0.5 / 5 Spoons - \"Penance, indeed. May the Prophet forgive the cook.\"",
             "Bones's Field Rule: \"Do not reach for the salt shaker. There is no salt shaker, and asking for one will start a thirty-minute theological tribunal.\""
@@ -741,6 +739,21 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
         }
     }
 
+    public static Color getFactionColorSafe(String factionId) {
+        if (Global.getSector() != null && factionId != null) {
+            FactionAPI f = Global.getSector().getFaction(factionId);
+            if (f != null && f.getBaseUIColor() != null) return f.getBaseUIColor();
+        }
+        return Misc.getTextColor();
+    }
+
+    public static Color getFactionColorSafe(MarketAPI market) {
+        if (market != null && market.getFaction() != null && market.getFaction().getBaseUIColor() != null) {
+            return market.getFaction().getBaseUIColor();
+        }
+        return Misc.getTextColor();
+    }
+
     @Override
     public String getSortString() {
         return "The Orbiting Spoon: Spacer's Registry & Field Guide";
@@ -764,10 +777,10 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
         float minDist = Float.MAX_VALUE;
         SectorEntityToken player = Global.getSector().getPlayerFleet();
 
-        if (player == null) return null;
+        if (player == null || player.getLocationInHyperspace() == null) return null;
 
         for (MarketAPI m : Global.getSector().getEconomy().getMarketsCopy()) {
-            if (m.getSize() >= 4 && !m.isHidden() && m.getPrimaryEntity() != null) {
+            if (m.getSize() >= 4 && !m.isHidden() && m.getPrimaryEntity() != null && m.getPrimaryEntity().getLocationInHyperspace() != null) {
                 if (!OS_IsVanillaFaction.isVanilla(m.getFactionId())) continue;
 
                 float dist = Misc.getDistance(player.getLocationInHyperspace(), m.getPrimaryEntity().getLocationInHyperspace());

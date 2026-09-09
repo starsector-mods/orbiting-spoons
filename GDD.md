@@ -1,4 +1,4 @@
-# The Orbiting Spoon — Game Design Document (GDD)
+# The Orbiting Spoon - Game Design Document (GDD)
 
 **A Lightweight Campaign-Layer Roleplay Mod for Starsector**
 
@@ -6,7 +6,7 @@
 
 ## 1. Executive Summary & High Concept
 
-*The Orbiting Spoon* enriches Starsector's campaign layer by adding a cozy, immersive roleplay venue: the Space Diner. Tucked into the corner of civilized portside bars sits *"The Orbiting Spoon"*—a massive, jury-rigged Domain-era automated culinary fabricator. 
+*The Orbiting Spoon* enriches Starsector's campaign layer by adding a cozy, immersive roleplay venue: the Space Diner. Tucked into the corner of civilized portside bars sits *"The Orbiting Spoon"* - a massive, jury-rigged Domain-era automated culinary fabricator. 
 
 This mod explicitly avoids bloated, complicated logistics systems or heavy math. It provides a simple, cheap, and flavorful way to grab a breather between bounties. Captains and deckhands alike crowd around cracked vinyl booths to eat warm regional dishes, bond with officers, and trigger a modest 14-day morale buff before launching back into the hyperspace storms.
 

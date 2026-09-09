@@ -19,60 +19,38 @@ public class OS_PayForMeal extends BaseCommandPlugin {
         if (dialog == null || params.isEmpty()) return false;
         
         int basePrice = params.get(0).getInt(memoryMap);
-        int finalPrice = -1;
-        
-        // Check local, global, entity, and sector memories
-        if (memoryMap != null) {
-            MemoryAPI local = memoryMap.get(MemKeys.LOCAL);
-            if (local != null && local.contains("$os_priceNum_" + basePrice)) {
-                finalPrice = local.getInt("$os_priceNum_" + basePrice);
-            }
-            if (finalPrice < 0) {
-                MemoryAPI global = memoryMap.get(MemKeys.GLOBAL);
-                if (global != null && global.contains("$os_priceNum_" + basePrice)) {
-                    finalPrice = global.getInt("$os_priceNum_" + basePrice);
-                }
-            }
-            if (finalPrice < 0) {
-                MemoryAPI entity = memoryMap.get(MemKeys.ENTITY);
-                if (entity != null && entity.contains("$os_priceNum_" + basePrice)) {
-                    finalPrice = entity.getInt("$os_priceNum_" + basePrice);
-                }
-            }
+        int multiplier = 1;
+        if (memoryMap != null && memoryMap.get(MemKeys.LOCAL) != null && memoryMap.get(MemKeys.LOCAL).contains("$os_multiplierNum")) {
+            multiplier = memoryMap.get(MemKeys.LOCAL).getInt("$os_multiplierNum");
         }
-        
-        if (finalPrice < 0) {
-            MemoryAPI sectorMem = Global.getSector().getMemoryWithoutUpdate();
-            if (sectorMem != null && sectorMem.contains("$os_priceNum_" + basePrice)) {
-                finalPrice = sectorMem.getInt("$os_priceNum_" + basePrice);
-            }
-        }
-        
-        // Dynamic calculation fallback if memory was somehow lost
-        if (finalPrice < 0) {
-            MemoryAPI mem = memoryMap != null ? memoryMap.get(MemKeys.LOCAL) : null;
-            if (mem != null && mem.contains("$os_multiplierNum")) {
-                int mult = mem.getInt("$os_multiplierNum");
-                finalPrice = basePrice * mult;
-            } else {
-                finalPrice = basePrice;
-            }
-        }
+        if (multiplier <= 0) multiplier = 1;
+        int finalPrice = basePrice * multiplier;
         
         if (Global.getSector() == null || Global.getSector().getPlayerFleet() == null || Global.getSector().getPlayerFleet().getCargo() == null) {
             return false;
         }
 
-        float currentCredits = Global.getSector().getPlayerFleet().getCargo().getCredits().get();
-        if (currentCredits >= finalPrice) {
-            Global.getSector().getPlayerFleet().getCargo().getCredits().subtract(finalPrice);
-            AddRemoveCommodity.addCreditsLossText(finalPrice, dialog.getTextPanel());
-        } else {
-            Global.getSector().getPlayerFleet().getCargo().getCredits().subtract(currentCredits);
-            if ((int) currentCredits > 0) {
-                AddRemoveCommodity.addCreditsLossText((int) currentCredits, dialog.getTextPanel());
-            }
+        if (OS_ShoreLeaveBuff.isDigesting()) {
+            float digRemain = OS_ShoreLeaveBuff.getDigestionDaysRemaining();
+            String activeMeal = OS_ShoreLeaveBuff.getMealName(OS_ShoreLeaveBuff.getActiveFaction());
+            dialog.getTextPanel().addParagraph(
+                "Your crew is still digesting leftover " + activeMeal + " (" + String.format("%.1f", digRemain) + " days remaining). Satiated spacers cannot stomach another full meal spread.",
+                Misc.getNegativeHighlightColor()
+            );
+            return true;
         }
+
+        float currentCredits = Global.getSector().getPlayerFleet().getCargo().getCredits().get();
+        if (currentCredits < finalPrice) {
+            dialog.getTextPanel().addParagraph(
+                "You cannot afford this meal (Requires " + String.format("%,d", finalPrice) + " credits; fleet purser has " + String.format("%,d", (long) currentCredits) + ").",
+                Misc.getNegativeHighlightColor()
+            );
+            return true;
+        }
+
+        Global.getSector().getPlayerFleet().getCargo().getCredits().subtract(finalPrice);
+        AddRemoveCommodity.addCreditsLossText(finalPrice, dialog.getTextPanel());
 
         // Extract faction parameter if provided, else fallback to market faction
         String factionId = null;

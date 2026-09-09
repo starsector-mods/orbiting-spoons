@@ -38,6 +38,11 @@ public class OS_ShoreLeaveIntel extends BaseIntelPlugin {
         return true;
     }
 
+    protected Object readResolve() {
+        endImmediately();
+        return this;
+    }
+
     public static void syncIntel(String factionId, float durationDays, boolean notify) {
         cleanupLegacyIntel();
     }
@@ -51,7 +56,7 @@ public class OS_ShoreLeaveIntel extends BaseIntelPlugin {
         IntelManagerAPI im = Global.getSector().getIntelManager();
         List<IntelInfoPlugin> existing = im.getIntel(OS_ShoreLeaveIntel.class);
         if (existing != null) {
-            for (IntelInfoPlugin item : existing) {
+            for (IntelInfoPlugin item : new java.util.ArrayList<>(existing)) {
                 im.removeIntel(item);
             }
         }

@@ -389,7 +389,10 @@ public class OS_FetchFleetStatus extends BaseCommandPlugin {
             text.addParagraph("- Active Crew: " + crewStr + " (Skeleton: " + minStr + " | Max: " + maxStr + " | " + surpStr + ")");
             text.highlightInLastPara(Misc.getHighlightColor(), crewStr, minStr, maxStr, surpStr);
 
-            if (m.crew < m.minCrew) {
+            if (m.crew == 0 && m.minCrew == 0) {
+                text.addParagraph("- Watch Roster: Fully automated drone fleet. Zero biological crew required.");
+                text.highlightInLastPara(Misc.getHighlightColor(), "Fully automated drone fleet.");
+            } else if (m.crew < m.minCrew) {
                 text.addParagraph("- Watch Roster: CRITICAL UNDERSTAFFING. Below skeleton crew requirements!");
                 text.highlightInLastPara(Misc.getNegativeHighlightColor(), "CRITICAL UNDERSTAFFING.");
             } else if (m.crew < (m.minCrew * 1.25f)) {

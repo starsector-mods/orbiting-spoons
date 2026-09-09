@@ -19,6 +19,7 @@ public class OS_ShoreLeaveBuff implements EveryFrameScript {
     public static final String KEY_TIMESTAMP = "$os_shore_leave_timestamp";
     public static final String KEY_DURATION = "$os_shore_leave_duration";
     public static final String KEY_FACTION = "$os_shore_leave_faction";
+    public static final String KEY_STATION = "$os_shore_leave_station";
 
     public static final float DEFAULT_DURATION = 14f;
     public static final float INDIE_DURATION = 21f;
@@ -153,6 +154,18 @@ public class OS_ShoreLeaveBuff implements EveryFrameScript {
         mem.set(KEY_DURATION, durationDays);
         mem.set(KEY_FACTION, factionId);
 
+        if (dialog != null && dialog.getInteractionTarget() != null) {
+            String stationName = null;
+            if (dialog.getInteractionTarget().getMarket() != null) {
+                stationName = dialog.getInteractionTarget().getMarket().getName();
+            } else if (dialog.getInteractionTarget().getName() != null) {
+                stationName = dialog.getInteractionTarget().getName();
+            }
+            if (stationName != null) {
+                mem.set(KEY_STATION, stationName);
+            }
+        }
+
         applyStatsToFleet();
         ensureScriptAdded();
 
@@ -191,9 +204,8 @@ public class OS_ShoreLeaveBuff implements EveryFrameScript {
 
     public static void ensureScriptAdded() {
         if (Global.getSector() == null) return;
-        if (!Global.getSector().hasTransientScript(OS_ShoreLeaveBuff.class)) {
-            Global.getSector().addTransientScript(new OS_ShoreLeaveBuff());
-        }
+        Global.getSector().removeTransientScriptsOfClass(OS_ShoreLeaveBuff.class);
+        Global.getSector().addTransientScript(new OS_ShoreLeaveBuff());
     }
 
     public static void applyStatsToFleet() {
@@ -287,6 +299,7 @@ public class OS_ShoreLeaveBuff implements EveryFrameScript {
                     mem.unset(KEY_TIMESTAMP);
                     mem.unset(KEY_DURATION);
                     mem.unset(KEY_FACTION);
+                    mem.unset(KEY_STATION);
                     mem.unset("$os_officerPerson");
                 }
             }
@@ -381,6 +394,7 @@ public class OS_ShoreLeaveBuff implements EveryFrameScript {
                 mem.unset(KEY_TIMESTAMP);
                 mem.unset(KEY_DURATION);
                 mem.unset(KEY_FACTION);
+                mem.unset(KEY_STATION);
             }
             clearCampaignHint();
             data.campaign.OS_OfficerFriendship.applyLoyalBonus(Global.getSector().getPlayerFleet());
@@ -404,5 +418,11 @@ public class OS_ShoreLeaveBuff implements EveryFrameScript {
             checkTimer = 0f;
             applyStatsToFleet();
         }
+    }
+
+    /** Called by Java deserialization if an instance was serialized in older savegames. */
+    protected Object readResolve() {
+        isDone = true;
+        return this;
     }
 }

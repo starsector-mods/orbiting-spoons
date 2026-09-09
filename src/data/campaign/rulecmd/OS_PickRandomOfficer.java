@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.fs.starfarer.api.Global;
+import com.fs.starfarer.api.campaign.CampaignFleetAPI;
 import com.fs.starfarer.api.campaign.InteractionDialogAPI;
 import com.fs.starfarer.api.campaign.OptionPanelAPI;
 import com.fs.starfarer.api.campaign.rules.MemKeys;
@@ -98,26 +99,25 @@ public class OS_PickRandomOfficer extends BaseCommandPlugin {
     }
 
     public static PersonAPI getActiveOfficerFromMemory(Map<String, MemoryAPI> memoryMap) {
+        String officerId = null;
         if (memoryMap != null) {
-            if (memoryMap.get(MemKeys.LOCAL) != null && memoryMap.get(MemKeys.LOCAL).contains("$os_officerPerson")) {
-                Object obj = memoryMap.get(MemKeys.LOCAL).get("$os_officerPerson");
-                if (obj instanceof PersonAPI) return (PersonAPI) obj;
-            }
-            if (memoryMap.get(MemKeys.ENTITY) != null && memoryMap.get(MemKeys.ENTITY).contains("$os_officerPerson")) {
-                Object obj = memoryMap.get(MemKeys.ENTITY).get("$os_officerPerson");
-                if (obj instanceof PersonAPI) return (PersonAPI) obj;
+            MemoryAPI local = memoryMap.get(MemKeys.LOCAL);
+            if (local != null && local.contains(KEY_ACTIVE_OFFICER_ID)) {
+                officerId = local.getString(KEY_ACTIVE_OFFICER_ID);
             }
         }
-        if (Global.getSector() != null) {
+        if (officerId == null && Global.getSector() != null) {
             MemoryAPI sectorMem = Global.getSector().getMemoryWithoutUpdate();
             if (sectorMem != null && sectorMem.contains(KEY_ACTIVE_OFFICER_ID)) {
-                String id = sectorMem.getString(KEY_ACTIVE_OFFICER_ID);
-                if ("crew".equals(id)) return null;
-                if (Global.getSector().getPlayerFleet() != null && Global.getSector().getPlayerFleet().getFleetData() != null) {
-                    for (OfficerDataAPI data : Global.getSector().getPlayerFleet().getFleetData().getOfficersCopy()) {
-                        if (data.getPerson() != null && data.getPerson().getId().equals(id)) {
-                            return data.getPerson();
-                        }
+                officerId = sectorMem.getString(KEY_ACTIVE_OFFICER_ID);
+            }
+        }
+        if (officerId != null) {
+            if ("crew".equals(officerId)) return null;
+            if (Global.getSector() != null && Global.getSector().getPlayerFleet() != null && Global.getSector().getPlayerFleet().getFleetData() != null) {
+                for (OfficerDataAPI data : Global.getSector().getPlayerFleet().getFleetData().getOfficersCopy()) {
+                    if (data.getPerson() != null && !data.getPerson().isAICore() && data.getPerson().getId().equals(officerId)) {
+                        return data.getPerson();
                     }
                 }
             }
@@ -144,7 +144,8 @@ public class OS_PickRandomOfficer extends BaseCommandPlugin {
         float digestionDays = OS_ShoreLeaveBuff.getDigestionDaysRemaining();
         String activeMeal = OS_ShoreLeaveBuff.getMealName(OS_ShoreLeaveBuff.getActiveFaction());
 
-        long playerCredits = (long) Global.getSector().getPlayerFleet().getCargo().getCredits().get();
+        CampaignFleetAPI playerFleet = Global.getSector() != null ? Global.getSector().getPlayerFleet() : null;
+        long playerCredits = (playerFleet != null && playerFleet.getCargo() != null) ? (long) playerFleet.getCargo().getCredits().get() : 0L;
         List<MenuItem> items = getMenuItems(factionId);
         MenuItem meal = !items.isEmpty() ? items.get(0) : new MenuItem("orbiting_spoon_order_generic_set", "Loaded Spacer's Full-Burn Diner Set", 18);
 
@@ -159,7 +160,7 @@ public class OS_PickRandomOfficer extends BaseCommandPlugin {
         }
         int scarcityMult = hasFoodShortage ? 2 : 1;
 
-        int crewCount = Math.max(1, (int) Global.getSector().getPlayerFleet().getCargo().getCrew());
+        int crewCount = (playerFleet != null && playerFleet.getCargo() != null) ? Math.max(1, (int) playerFleet.getCargo().getCrew()) : 1;
         int multiplier = 1;
 
         int finalPrice = meal.basePrice * multiplier * scarcityMult;
@@ -393,11 +394,12 @@ public class OS_PickRandomOfficer extends BaseCommandPlugin {
             hasOfficer = true;
         }
 
+        CampaignFleetAPI playerFleet = Global.getSector() != null ? Global.getSector().getPlayerFleet() : null;
         int multiplier;
         String officerName = "";
         String officerPersonality = "steady";
         int officerLevel = 1;
-        int crewCount = Math.max(1, (int) Global.getSector().getPlayerFleet().getCargo().getCrew());
+        int crewCount = (playerFleet != null && playerFleet.getCargo() != null) ? Math.max(1, (int) playerFleet.getCargo().getCrew()) : 1;
         
         if (!hasOfficer || chosenPerson == null) {
             multiplier = 1;
@@ -413,40 +415,44 @@ public class OS_PickRandomOfficer extends BaseCommandPlugin {
             // Show officer portrait in the dialog visual panel
             dialog.getVisualPanel().showPersonInfo(chosenPerson, true);
         }
-        
 
-        
-        // Helper to store in transient dialog memory scopes (LOCAL and ENTITY only)
-        // Never store raw PersonAPI or large price tables in persistent sectorMem!
-        List<MemoryAPI> memories = new ArrayList<>();
-        if (memoryMap != null) {
-            if (memoryMap.containsKey(MemKeys.LOCAL) && memoryMap.get(MemKeys.LOCAL) != null) memories.add(memoryMap.get(MemKeys.LOCAL));
-            if (memoryMap.containsKey(MemKeys.ENTITY) && memoryMap.get(MemKeys.ENTITY) != null) memories.add(memoryMap.get(MemKeys.ENTITY));
+        // Clean up any legacy raw PersonAPI or mod keys from ENTITY memory scope
+        if (memoryMap != null && memoryMap.get(MemKeys.ENTITY) != null) {
+            MemoryAPI entityMem = memoryMap.get(MemKeys.ENTITY);
+            entityMem.unset("$os_officerPerson");
+            entityMem.unset("$os_hasOfficer");
+            entityMem.unset("$os_officerName");
+            entityMem.unset("$os_officerPersonality");
+            entityMem.unset("$os_officerLevel");
+            entityMem.unset("$os_crewCount");
+            entityMem.unset("$os_multiplier");
+            entityMem.unset("$os_multiplierNum");
+            entityMem.unset("$os_officerFriendship");
+            entityMem.unset("$os_officerTier");
         }
 
-        for (MemoryAPI mem : memories) {
-            mem.set("$os_hasOfficer", hasOfficer, 0);
-            mem.set("$os_officerName", officerName, 0);
-            mem.set("$os_officerPersonality", officerPersonality, 0);
-            mem.set("$os_officerLevel", officerLevel, 0);
-            mem.set("$os_crewCount", crewCount, 0);
-            mem.set("$os_multiplier", String.format("%,d", multiplier), 0);
-            mem.set("$os_multiplierNum", multiplier, 0);
+        MarketAPI market = dialog.getInteractionTarget() != null ? dialog.getInteractionTarget().getMarket() : null;
+        String marketName = market != null ? market.getName() : "the station";
+
+        // Store exclusively in transient LOCAL dialog memory with 0-day expiration
+        if (memoryMap != null && memoryMap.get(MemKeys.LOCAL) != null) {
+            MemoryAPI local = memoryMap.get(MemKeys.LOCAL);
+            local.set("$marketName", marketName, 0);
+            local.set("$os_hasOfficer", hasOfficer, 0);
+            local.set("$os_officerName", officerName, 0);
+            local.set("$os_officerPersonality", officerPersonality, 0);
+            local.set("$os_officerLevel", officerLevel, 0);
+            local.set("$os_crewCount", crewCount, 0);
+            local.set("$os_multiplier", String.format("%,d", multiplier), 0);
+            local.set("$os_multiplierNum", multiplier, 0);
             if (chosenPerson != null) {
-                mem.set("$os_officerPerson", chosenPerson, 0);
-                mem.set("$os_officerFriendship", OS_OfficerFriendship.getFriendship(chosenPerson), 0);
-                mem.set("$os_officerTier", OS_OfficerFriendship.getTierName(OS_OfficerFriendship.getFriendship(chosenPerson)), 0);
+                local.set(KEY_ACTIVE_OFFICER_ID, chosenPerson.getId(), 0);
+                local.set("$os_officerFriendship", OS_OfficerFriendship.getFriendship(chosenPerson), 0);
+                local.set("$os_officerTier", OS_OfficerFriendship.getTierName(OS_OfficerFriendship.getFriendship(chosenPerson)), 0);
             } else {
-                mem.unset("$os_officerPerson");
-                mem.unset("$os_officerFriendship");
-                mem.unset("$os_officerTier");
-            }
-            
-            // Populate prices for all base costs 1 through 1000
-            for (int base = 1; base <= 1000; base++) {
-                int finalPrice = base * multiplier;
-                mem.set("$os_price_" + base, String.format("%,d", finalPrice), 0);
-                mem.set("$os_priceNum_" + base, finalPrice, 0);
+                local.set(KEY_ACTIVE_OFFICER_ID, "crew", 0);
+                local.unset("$os_officerFriendship");
+                local.unset("$os_officerTier");
             }
         }
 

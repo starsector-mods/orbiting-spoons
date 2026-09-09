@@ -35,14 +35,11 @@ public class OS_ModPlugin extends BaseModPlugin {
         super.onGameLoad(newGame);
 
         // Purge obsolete Shore Leave intel entries from older mod versions
-        if (Global.getSector() != null && Global.getSector().getIntelManager() != null) {
-            IntelManagerAPI im = Global.getSector().getIntelManager();
-            List<IntelInfoPlugin> shoreLeaveIntels = im.getIntel(OS_ShoreLeaveIntel.class);
-            if (shoreLeaveIntels != null) {
-                for (IntelInfoPlugin intel : new ArrayList<>(shoreLeaveIntels)) {
-                    im.removeIntel(intel);
-                }
-            }
+        OS_ShoreLeaveIntel.cleanupLegacyIntel();
+
+        // Purge any legacy persistent scripts from older savegames (now transient)
+        if (Global.getSector() != null) {
+            Global.getSector().removeScriptsOfClass(OS_ShoreLeaveBuff.class);
         }
 
         // Sync buff state from save memory keys

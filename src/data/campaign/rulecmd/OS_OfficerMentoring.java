@@ -10,6 +10,7 @@ import com.fs.starfarer.api.campaign.OptionPanelAPI;
 import com.fs.starfarer.api.campaign.rules.MemKeys;
 import com.fs.starfarer.api.campaign.rules.MemoryAPI;
 import com.fs.starfarer.api.characters.MutableCharacterStatsAPI.SkillLevelAPI;
+import com.fs.starfarer.api.characters.OfficerDataAPI;
 import com.fs.starfarer.api.characters.PersonAPI;
 import com.fs.starfarer.api.characters.SkillSpecAPI;
 import com.fs.starfarer.api.impl.campaign.rulecmd.AddRemoveCommodity;
@@ -102,8 +103,10 @@ public class OS_OfficerMentoring extends BaseCommandPlugin {
             }
 
             // Award player fleet Bonus XP
-            Global.getSector().getPlayerStats().setBonusXPGainReason("from wardroom dining & debriefing");
-            Global.getSector().getPlayerStats().addBonusXP(DINING_OFFICER_BONUS_XP, true, dialog != null ? dialog.getTextPanel() : null, true);
+            if (Global.getSector() != null && Global.getSector().getPlayerStats() != null) {
+                Global.getSector().getPlayerStats().setBonusXPGainReason("from wardroom dining & debriefing");
+                Global.getSector().getPlayerStats().addBonusXP(DINING_OFFICER_BONUS_XP, true, dialog != null ? dialog.getTextPanel() : null, true);
+            }
 
         } else {
             // Eating with crew ($os_hasOfficer == false)
@@ -116,9 +119,19 @@ public class OS_OfficerMentoring extends BaseCommandPlugin {
                 dialog.getTextPanel().setFontInsignia();
             }
 
-            Global.getSector().getPlayerStats().setBonusXPGainReason("from seasoned deckhands mentoring rookie spacers");
-            Global.getSector().getPlayerStats().addBonusXP(DINING_CREW_BONUS_XP, true, dialog != null ? dialog.getTextPanel() : null, true);
+            if (Global.getSector() != null && Global.getSector().getPlayerStats() != null) {
+                Global.getSector().getPlayerStats().setBonusXPGainReason("from seasoned deckhands mentoring rookie spacers");
+                Global.getSector().getPlayerStats().addBonusXP(DINING_CREW_BONUS_XP, true, dialog != null ? dialog.getTextPanel() : null, true);
+            }
         }
+    }
+
+    public static boolean isSupportedSkill(String skillId) {
+        if (skillId == null) return false;
+        for (String s : VALID_OFFICER_SKILLS) {
+            if (s.equals(skillId)) return true;
+        }
+        return false;
     }
 
     public static List<SkillLevelAPI> getLearnedCombatSkills(PersonAPI officer) {
@@ -126,7 +139,9 @@ public class OS_OfficerMentoring extends BaseCommandPlugin {
         if (officer == null || officer.getStats() == null) return list;
         for (SkillLevelAPI sl : officer.getStats().getSkillsCopy()) {
             if (sl.getSkill() != null && sl.getSkill().isCombatOfficerSkill() && sl.getLevel() > 0) {
-                list.add(sl);
+                if (isSupportedSkill(sl.getSkill().getId())) {
+                    list.add(sl);
+                }
             }
         }
         return list;
@@ -174,8 +189,8 @@ public class OS_OfficerMentoring extends BaseCommandPlugin {
         if ("do_remove".equals(action)) {
             String skillId = params.size() > 1 ? params.get(1).getString(memoryMap) : null;
             if (skillId != null && hasSkill(officer, skillId)) {
-                int playerSP = Global.getSector().getPlayerStats().getStoryPoints();
-                float playerCredits = Global.getSector().getPlayerFleet().getCargo().getCredits().get();
+                int playerSP = (Global.getSector() != null && Global.getSector().getPlayerStats() != null) ? Global.getSector().getPlayerStats().getStoryPoints() : 0;
+                float playerCredits = (Global.getSector() != null && Global.getSector().getPlayerFleet() != null && Global.getSector().getPlayerFleet().getCargo() != null) ? Global.getSector().getPlayerFleet().getCargo().getCredits().get() : 0;
 
                 if (playerSP < RESPEC_SP_COST || playerCredits < RESPEC_CREDIT_COST) {
                     dialog.getTextPanel().addParagraph(
@@ -192,21 +207,25 @@ public class OS_OfficerMentoring extends BaseCommandPlugin {
                 String skillName = spec != null ? spec.getName() : skillId;
 
                 // 1. Spend 1 Story Point (100% bonus XP returned)
-                Global.getSector().getPlayerStats().spendStoryPoints(
-                    RESPEC_SP_COST,
-                    true,
-                    dialog.getTextPanel(),
-                    true,
-                    1f,
-                    "Unlearned " + skillName + " for " + officer.getNameString() + " over top-of-the-line banquet"
-                );
+                if (Global.getSector() != null && Global.getSector().getPlayerStats() != null) {
+                    Global.getSector().getPlayerStats().spendStoryPoints(
+                        RESPEC_SP_COST,
+                        true,
+                        dialog.getTextPanel(),
+                        true,
+                        1f,
+                        "Unlearned " + skillName + " for " + officer.getNameString() + " over top-of-the-line banquet"
+                    );
+                }
 
                 // 2. Deduct 100,000 credits for top-of-the-line food and private debrief
-                Global.getSector().getPlayerFleet().getCargo().getCredits().subtract(RESPEC_CREDIT_COST);
-                AddRemoveCommodity.addCreditsLossText(RESPEC_CREDIT_COST, dialog.getTextPanel());
+                if (Global.getSector() != null && Global.getSector().getPlayerFleet() != null && Global.getSector().getPlayerFleet().getCargo() != null) {
+                    Global.getSector().getPlayerFleet().getCargo().getCredits().subtract(RESPEC_CREDIT_COST);
+                    AddRemoveCommodity.addCreditsLossText(RESPEC_CREDIT_COST, dialog.getTextPanel());
+                }
 
                 // 3. If the skill was Elite, refund the Story Point previously spent to make it Elite
-                if (wasElite) {
+                if (wasElite && Global.getSector() != null && Global.getSector().getPlayerStats() != null) {
                     Global.getSector().getPlayerStats().addStoryPoints(1, dialog.getTextPanel(), false);
                     dialog.getTextPanel().addParagraph(
                         "Refunded 1 Story Point previously invested in making " + skillName + " Elite.",
@@ -214,10 +233,26 @@ public class OS_OfficerMentoring extends BaseCommandPlugin {
                     );
                 }
 
-                // 4. Cleanly unlearn skill
+                // 4. Cleanly unlearn skill and decrement level so the officer can re-pick a skill
                 officer.getStats().setSkillLevel(skillId, 0f);
                 officer.getStats().decreaseSkill(skillId);
+                int curLevel = officer.getStats().getLevel();
+                if (curLevel > 0) {
+                    officer.getStats().setLevel(curLevel - 1);
+                }
                 officer.getStats().refreshCharacterStatsEffects();
+
+                // Refresh officer picks so the '+' button is immediately active in officer screen
+                if (Global.getSector() != null && Global.getSector().getPlayerFleet() != null && Global.getSector().getPlayerFleet().getFleetData() != null) {
+                    for (OfficerDataAPI data : Global.getSector().getPlayerFleet().getFleetData().getOfficersCopy()) {
+                        if (data.getPerson() == officer) {
+                            if (data.canLevelUp()) {
+                                data.makeSkillPicks();
+                            }
+                            break;
+                        }
+                    }
+                }
 
                 // 5. Feedback in log
                 dialog.getTextPanel().setFontSmallInsignia();
@@ -281,8 +316,10 @@ public class OS_OfficerMentoring extends BaseCommandPlugin {
         int levelAfter = officer.getStats().getLevel();
 
         // Player Fleet Bonus XP
-        Global.getSector().getPlayerStats().setBonusXPGainReason("from tactical mentoring & war stories");
-        Global.getSector().getPlayerStats().addBonusXP(MENTORING_FLEET_BONUS_XP, true, dialog.getTextPanel(), true);
+        if (Global.getSector() != null && Global.getSector().getPlayerStats() != null) {
+            Global.getSector().getPlayerStats().setBonusXPGainReason("from tactical mentoring & war stories");
+            Global.getSector().getPlayerStats().addBonusXP(MENTORING_FLEET_BONUS_XP, true, dialog != null ? dialog.getTextPanel() : null, true);
+        }
 
         // Camaraderie boost (+5%)
         OS_OfficerFriendship.addFriendship(officer, 5, dialog);
@@ -328,7 +365,9 @@ public class OS_OfficerMentoring extends BaseCommandPlugin {
         dialog.getTextPanel().setFontInsignia();
 
         // Sound effect
-        Global.getSoundPlayer().playUISound("ui_char_increase_skill", 1f, 1f);
+        if (Global.getSoundPlayer() != null) {
+            Global.getSoundPlayer().playUISound("ui_char_level_up", 1f, 1f);
+        }
 
         options.addOption("Hold a Wardroom Tactical Debrief (Doctrine Retraining)", "orbiting_spoon_mentor_menu");
         options.addOption("Return to the table", "orbiting_spoon_start_dispatch");
@@ -390,8 +429,8 @@ public class OS_OfficerMentoring extends BaseCommandPlugin {
         int currentSkills = learned.size();
         int openSlots = Math.max(0, maxSkills - currentSkills);
 
-        int playerSP = Global.getSector().getPlayerStats().getStoryPoints();
-        float playerCredits = Global.getSector().getPlayerFleet().getCargo().getCredits().get();
+        int playerSP = (Global.getSector() != null && Global.getSector().getPlayerStats() != null) ? Global.getSector().getPlayerStats().getStoryPoints() : 0;
+        float playerCredits = (Global.getSector() != null && Global.getSector().getPlayerFleet() != null && Global.getSector().getPlayerFleet().getCargo() != null) ? Global.getSector().getPlayerFleet().getCargo().getCredits().get() : 0;
 
         dialog.getTextPanel().setFontSmallInsignia();
         dialog.getTextPanel().addParagraph(

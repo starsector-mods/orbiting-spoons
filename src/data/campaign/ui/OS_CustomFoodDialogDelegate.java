@@ -125,7 +125,15 @@ public class OS_CustomFoodDialogDelegate extends BaseCustomDialogDelegate {
         regional.costString = String.format("%,d credits", finalRegionalPrice);
 
         String crest = (faction != null) ? faction.getCrest() : null;
-        regional.iconSprite = (crest != null && !crest.isEmpty()) ? crest : "graphics/factions/crest_independent.png";
+        if (crest == null || crest.isEmpty()) {
+            if (Global.getSector() != null && Global.getSector().getFaction("independent") != null) {
+                crest = Global.getSector().getFaction("independent").getCrest();
+            }
+            if (crest == null || crest.isEmpty()) {
+                crest = "graphics/factions/crest_neutral_traders.png";
+            }
+        }
+        regional.iconSprite = crest;
 
         regional.description = getRegionalDescription(factionId, isWardroom);
         regional.perkSummary = "-5% Supply Upkeep, +5% Max CR & +10% CR Recovery (Combat Ships), +10% Sensor Profile, -5% Acceleration";
@@ -340,11 +348,11 @@ public class OS_CustomFoodDialogDelegate extends BaseCustomDialogDelegate {
         main.addSpacer(8f);
 
         // Context info
-        CampaignFleetAPI playerFleet = Global.getSector().getPlayerFleet();
-        long playerCredits = playerFleet != null ? (long) playerFleet.getCargo().getCredits().get() : 0;
-        int lobsterInCargo = playerFleet != null ? (int) playerFleet.getCargo().getCommodityQuantity(Commodities.LOBSTER) : 0;
-        int luxuryInCargo = playerFleet != null ? (int) playerFleet.getCargo().getCommodityQuantity(Commodities.LUXURY_GOODS) : 0;
-        int foodInCargo = playerFleet != null ? (int) playerFleet.getCargo().getCommodityQuantity(Commodities.FOOD) : 0;
+        CampaignFleetAPI playerFleet = Global.getSector() != null ? Global.getSector().getPlayerFleet() : null;
+        long playerCredits = (playerFleet != null && playerFleet.getCargo() != null) ? (long) playerFleet.getCargo().getCredits().get() : 0;
+        int lobsterInCargo = (playerFleet != null && playerFleet.getCargo() != null) ? (int) playerFleet.getCargo().getCommodityQuantity(Commodities.LOBSTER) : 0;
+        int luxuryInCargo = (playerFleet != null && playerFleet.getCargo() != null) ? (int) playerFleet.getCargo().getCommodityQuantity(Commodities.LUXURY_GOODS) : 0;
+        int foodInCargo = (playerFleet != null && playerFleet.getCargo() != null) ? (int) playerFleet.getCargo().getCommodityQuantity(Commodities.FOOD) : 0;
 
         String diningPartyText;
         if (officer != null) {
@@ -352,8 +360,12 @@ public class OS_CustomFoodDialogDelegate extends BaseCustomDialogDelegate {
             String tier = OS_OfficerFriendship.getTierName(fs);
             diningPartyText = "Dining Party: Wardroom Table with " + officer.getNameString() + " (Level " + officer.getStats().getLevel() + ", Camaraderie: " + fs + "% [" + tier + "])";
         } else {
-            int crew = Math.max(1, (int) playerFleet.getCargo().getCrew());
-            diningPartyText = "Dining Party: General Mess Hall with Fleet Crew (" + crew + " Spacers)";
+            int crew = (playerFleet != null && playerFleet.getCargo() != null) ? (int) playerFleet.getCargo().getCrew() : 0;
+            if (crew > 0) {
+                diningPartyText = "Dining Party: General Mess Hall with Fleet Crew (" + crew + " Spacers)";
+            } else {
+                diningPartyText = "Dining Party: Automated Galley Service (Automated Fleet / Flagship Command Staff)";
+            }
         }
         main.addPara(diningPartyText, 2f, Misc.getHighlightColor(), officer != null ? officer.getNameString() : "Fleet Crew");
 
@@ -467,40 +479,48 @@ public class OS_CustomFoodDialogDelegate extends BaseCustomDialogDelegate {
     public void customDialogConfirm() {
         if (orderExecuted) return;
 
-        if (OS_ShoreLeaveBuff.isDigesting()) {
-            float digRemain = OS_ShoreLeaveBuff.getDigestionDaysRemaining();
-            String activeMeal = OS_ShoreLeaveBuff.getMealName(OS_ShoreLeaveBuff.getActiveFaction());
-            dialog.getTextPanel().addParagraph(
-                    "Your crew is still digesting leftover " + activeMeal + " (" + String.format("%.1f", digRemain) + " days remaining). Satiated spacers cannot stomach another full meal spread.",
-                    Misc.getNegativeHighlightColor()
-            );
-            refreshDialogOptions();
-            return;
-        }
+        try {
+            if (OS_ShoreLeaveBuff.isDigesting()) {
+                float digRemain = OS_ShoreLeaveBuff.getDigestionDaysRemaining();
+                String activeMeal = OS_ShoreLeaveBuff.getMealName(OS_ShoreLeaveBuff.getActiveFaction());
+                dialog.getTextPanel().addParagraph(
+                        "Your crew is still digesting leftover " + activeMeal + " (" + String.format("%.1f", digRemain) + " days remaining). Satiated spacers cannot stomach another full meal spread.",
+                        Misc.getNegativeHighlightColor()
+                );
+                refreshDialogOptions();
+                return;
+            }
 
-        MealOption chosen = mealOptions.get(selectedMealId);
-        if (chosen == null) {
-            dialog.getTextPanel().addParagraph("No meal was selected.", Misc.getNegativeHighlightColor());
-            refreshDialogOptions();
-            return;
-        }
+            MealOption chosen = mealOptions.get(selectedMealId);
+            if (chosen == null) {
+                dialog.getTextPanel().addParagraph("No meal was selected.", Misc.getNegativeHighlightColor());
+                refreshDialogOptions();
+                return;
+            }
 
-        if (!chosen.canAfford) {
-            dialog.getTextPanel().addParagraph(
-                    chosen.unaffordableReason != null ? chosen.unaffordableReason : "You cannot afford this meal.",
-                    Misc.getNegativeHighlightColor()
-            );
-            refreshDialogOptions();
-            return;
-        }
+            if (!chosen.canAfford) {
+                dialog.getTextPanel().addParagraph(
+                        chosen.unaffordableReason != null ? chosen.unaffordableReason : "You cannot afford this meal.",
+                        Misc.getNegativeHighlightColor()
+                );
+                refreshDialogOptions();
+                return;
+            }
 
-        executeMealOrder(chosen);
-        orderExecuted = true;
+            executeMealOrder(chosen);
+            orderExecuted = true;
+        } finally {
+            cleanup();
+        }
     }
 
     @Override
     public void customDialogCancel() {
-        refreshDialogOptions();
+        try {
+            refreshDialogOptions();
+        } finally {
+            cleanup();
+        }
     }
 
     @Override
@@ -527,25 +547,27 @@ public class OS_CustomFoodDialogDelegate extends BaseCustomDialogDelegate {
 
         // Deduct payment or commodities
         if (opt.commodityId != null && opt.commodityCost > 0) {
+            float available = playerFleet.getCargo().getCommodityQuantity(opt.commodityId);
+            if (available < opt.commodityCost) {
+                dialog.getTextPanel().addParagraph("You do not have enough " + opt.commodityId + " in your cargo hold.", Misc.getNegativeHighlightColor());
+                return;
+            }
             playerFleet.getCargo().removeCommodity(opt.commodityId, opt.commodityCost);
             AddRemoveCommodity.addCommodityLossText(opt.commodityId, opt.commodityCost, dialog.getTextPanel());
         } else if (opt.creditCost > 0) {
             float currentCreds = playerFleet.getCargo().getCredits().get();
-            if (currentCreds >= opt.creditCost) {
-                playerFleet.getCargo().getCredits().subtract(opt.creditCost);
-                AddRemoveCommodity.addCreditsLossText(opt.creditCost, dialog.getTextPanel());
-            } else {
-                playerFleet.getCargo().getCredits().subtract(currentCreds);
-                if ((int) currentCreds > 0) {
-                    AddRemoveCommodity.addCreditsLossText((int) currentCreds, dialog.getTextPanel());
-                }
+            if (currentCreds < opt.creditCost) {
+                dialog.getTextPanel().addParagraph("Insufficient credits (Requires " + String.format("%,d", opt.creditCost) + " credits).", Misc.getNegativeHighlightColor());
+                return;
             }
+            playerFleet.getCargo().getCredits().subtract(opt.creditCost);
+            AddRemoveCommodity.addCreditsLossText(opt.creditCost, dialog.getTextPanel());
         }
 
         // Famine Relief reputation bonus
         if (opt.isEmergencyRelief) {
             MarketAPI market = dialog.getInteractionTarget() != null ? dialog.getInteractionTarget().getMarket() : null;
-            if (market != null && market.getFaction() != null) {
+            if (market != null && market.getFaction() != null && !market.getFaction().isPlayerFaction()) {
                 CoreReputationPlugin.CustomRepImpact impact = new CoreReputationPlugin.CustomRepImpact();
                 impact.delta = 0.05f;
                 Global.getSector().adjustPlayerReputation(
@@ -584,8 +606,10 @@ public class OS_CustomFoodDialogDelegate extends BaseCustomDialogDelegate {
         // Award Dining Experience (Officer XP + Fleet Bonus XP or Crew Bonus XP)
         OS_OfficerMentoring.awardDiningExperience(dialog, officer);
 
-        // Play UI sound
-        Global.getSoundPlayer().playUISound("ui_char_increase_skill", 1f, 1f);
+        // Play UI sound safely
+        if (Global.getSoundPlayer() != null) {
+            Global.getSoundPlayer().playUISound("ui_cargo_food_drop", 1f, 1f);
+        }
 
         // Refresh interaction dialog options to reflect new state
         refreshDialogOptions();
@@ -594,5 +618,12 @@ public class OS_CustomFoodDialogDelegate extends BaseCustomDialogDelegate {
     private void refreshDialogOptions() {
         int officerCount = OS_PickRandomOfficer.getHumanOfficers().size();
         OS_PickRandomOfficer.populateMainMenu(dialog, officer, officerCount, factionId);
+    }
+
+    private void cleanup() {
+        radioButtons.clear();
+        mealOptions.clear();
+        callback = null;
+        officer = null;
     }
 }
