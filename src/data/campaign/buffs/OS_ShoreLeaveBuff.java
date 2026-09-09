@@ -410,13 +410,23 @@ public class OS_ShoreLeaveBuff implements EveryFrameScript {
         // Keep the HUD overlay updated with Shore Leave duration
         updateCampaignHint();
 
-        // Throttle ship sync to once per second to maintain zero performance drag
+        // Throttle ship sync to once per second, and only apply if fleet composition changed to prevent performance drag
         checkTimer += amount;
         if (checkTimer >= 1.0f) {
             checkTimer = 0f;
-            applyStatsToFleet();
+            int currentFleetHash = 0;
+            if (Global.getSector() != null && Global.getSector().getPlayerFleet() != null && Global.getSector().getPlayerFleet().getFleetData() != null) {
+                currentFleetHash = Global.getSector().getPlayerFleet().getFleetData().getMembersListCopy().size() * 31 
+                    + Global.getSector().getPlayerFleet().getFleetData().getOfficersCopy().size();
+            }
+            if (currentFleetHash != lastFleetHash) {
+                lastFleetHash = currentFleetHash;
+                applyStatsToFleet();
+            }
         }
     }
+
+    protected transient int lastFleetHash = -1;
 
     /** Called by Java deserialization if an instance was serialized in older savegames. */
     protected Object readResolve() {

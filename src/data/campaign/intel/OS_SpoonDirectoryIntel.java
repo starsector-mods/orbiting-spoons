@@ -121,6 +121,7 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
         SectorEntityToken nearest = getMapLocation(null);
         if (nearest != null && nearest.getMarket() != null) {
             MarketAPI m = nearest.getMarket();
+            if (m == null) return;
             SectorEntityToken player = Global.getSector().getPlayerFleet();
             float distLY = 0f;
             boolean inSys = false;
@@ -493,7 +494,7 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
 
         // 1. Sindrian Diktat
         addReviewCard(info, opad, spad,
-            "[No Transponders: Cruorian Reeds] Sindrian Diktat: Volturnian Lobster Feast (600 credits)",
+            "[No Transponders: Cruorian Reeds] Sindrian Diktat: Volturnian Lobster Feast (200 credits)",
             getFactionColorSafe("sindrian_diktat"),
             "Sweet, tender blue-shell lobster poached in fiery clarified pepper butter. Every bite is seasoned with the sweat of Askonia's dockworkers and the paranoia of an authoritarian petrol-state. Pure decadence.", "Sweet, tender blue-shell lobster poached in fiery clarified pepper butter, served with Askonia-grown root vegetables. Every bite is seasoned with the sweat of overworked dockhands, the relentless hum of Sindrian refineries, and the crushing paranoia of an authoritarian petrol-state. It is pure, unabashed decadence in a sector starved of joy.",
             "Rating: 4.5 / 5 Spoons - \"Eat like a tyrant before the fuel tanks blow.\"",
@@ -511,7 +512,7 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
 
         // 3. Persean League
         addReviewCard(info, opad, spad,
-            "[A Cook's Burn: Kazeron's Terraces] Persean League: Archon's Grand Mezze Banquet (350 credits)",
+            "[A Cook's Burn: Kazeron's Terraces] Persean League: Archon's Grand Mezze Banquet (200 credits)",
             getFactionColorSafe("persean"),
             "Rosemary-rubbed waterfowl skewers and chilled citrus liqueur. Meticulously refined to stroke merchant egos, but the citrus cuts through engine grease like nothing else in the Core.", "Rosemary-rubbed waterfowl skewers, chilled citrus liqueur, and perfectly toasted flatbread. It is meticulously refined, obviously designed to stroke the egos of bloated merchant princes and petty planetary nobles. Yet, undeniably, the sharp citrus cuts through a week of recycled engine grease and stale air like nothing else in the Core Worlds.",
             "Rating: 4.0 / 5 Spoons - \"Good diplomacy on an empty stomach.\"",
@@ -529,7 +530,7 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
 
         // 5. Tri-Tachyon
         addReviewCard(info, opad, spad,
-            "[Sectors Unknown: Port Tse Corporate Lounge] Tri-Tachyon: Executive Synth-Steak Suite (450 credits)",
+            "[Sectors Unknown: Port Tse Corporate Lounge] Tri-Tachyon: Executive Synth-Steak Suite (200 credits)",
             getFactionColorSafe("tritachyon"),
             "A terrifying miracle of bio-molecular synthesis. Laser-seared and mathematically perfect, it tastes like quarterly profit margins and is paired with nootropics. Clean, expensive, and devoid of humanity.", "A terrifying miracle of bio-molecular synthesis. Laser-seared and mathematically perfect, it tastes like quarterly profit margins, boardroom sterility, and is paired with a side of cognitive-enhancing nootropics. It is clean, unapologetically expensive, and completely devoid of human warmth. You eat it, you perform better, and you try not to think about the culture vats.",
             "Rating: 3.5 / 5 Spoons - \"Don't ask what culture vat it came from.\"",
@@ -538,7 +539,7 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
 
         // 6. Hegemony
         addReviewCard(info, opad, spad,
-            "[The Nasty Chits: Chicomoztoc Gantry Mess] Hegemony: Commissary Auxiliary Rations (150 credits)",
+            "[The Nasty Chits: Chicomoztoc Gantry Mess] Hegemony: Commissary Auxiliary Rations (200 credits)",
             getFactionColorSafe("hegemony"),
             "Dense hardtack that could plug a hull breach, and boiling iron-soy sludge. No garlic, no pepper, no joy. Tastes like grey primer and obedience. Eat before your twelve-hour shift.", "Dense hardtack that could plug a micro-meteorite hull breach, and boiling iron-soy sludge. No garlic, no pepper, no joy. It tastes like grey primer paint, martial law, and blind obedience to the chain of command. Eat it quickly, standing up, before your twelve-hour shift begins. The Hegemony does not pay you to enjoy your meals.",
             "Rating: 2.5 / 5 Spoons - \"Eat it standing up. Tastes like martial law.\"",
@@ -547,7 +548,7 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
 
         // 7. Pirates
         addReviewCard(info, opad, spad,
-            "[No Transponders: Donkers Salvage Yards] Pirates: Fringe Scavenger Platter (100 credits)",
+            "[No Transponders: Donkers Salvage Yards] Pirates: Fringe Scavenger Platter (200 credits)",
             getFactionColorSafe("pirates"),
             "Mystery ribs charred over open engine manifolds, drowned in peppery fungal sludge to cover the rot. You will experience either animal euphoria or catastrophic gastrointestinal failure. Roll the dice.", "Mystery ribs charred over open engine manifolds, drowned in a peppery fungal sludge to cover the creeping rot. You will experience either a rush of animal euphoria or catastrophic gastrointestinal failure. It's a culinary roll of the dice, much like trusting a pirate with your docking fees. Eat at your own extreme peril.",
             "Rating: 2.0 / 5 Spoons - \"Hazard pay required. I loved every filthy bite.\"",
@@ -556,7 +557,7 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
 
         // 8. Luddic Path
         addReviewCard(info, opad, spad,
-            "[Sectors Unknown: Cell Bunker Galley] Luddic Path: Ascetic Penance Broth (50 credits)",
+            "[Sectors Unknown: Cell Bunker Galley] Luddic Path: Ascetic Penance Broth (200 credits)",
             getFactionColorSafe("luddic_path"),
             "Tastes like crushed gravel simmered in reactor runoff. Cell fighters hammered off the seasoning injectors because pleasure is a sin. Buy only if facing active starvation.", "Tastes like crushed gravel simmered in irradiated reactor runoff. The Path's cell fighters intentionally hammered off the seasoning injectors because experiencing culinary pleasure is a sin against Ludd. It is bleak, gritty, and tastes of impending martyrdom. Purchase this only if you are facing active starvation or wish to punish yourself for your worldly transgressions.",
             "Rating: 0.5 / 5 Spoons - \"Penance, indeed. May the Prophet forgive the cook.\"",
@@ -729,17 +730,17 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
             "Fabricators require high-voltage industrial reactor taps. They are exclusively installed in portside bars of developed Core faction colonies (Market Size 4+).", Misc.getTextColor(), spad);
         info.addSpacer(4f);
 
-        info.addPara("Standardized Commissary Tariffs (Flat 50 to 600 Credits):", Misc.getHighlightColor(), spad);
+        info.addPara("Standardized Commissary Tariffs (Flat 200 Credits):", Misc.getHighlightColor(), spad);
         info.addPara(
             "Diner meals are subsidized, avoiding per-crew scaling multipliers. Prices are flat based on the local faction:", Misc.getTextColor(), spad);
         bullet(info);
-        addBullet(info, "Luddic Path: Ascetic Penance Rations (50 credits)", spad, Misc.getHighlightColor(), "50 credits");
-        addBullet(info, "Pirates: Fringe Scavenger Platter (100 credits)", spad, Misc.getHighlightColor(), "100 credits");
-        addBullet(info, "Hegemony: Commissary Auxiliary Rations (150 credits)", spad, Misc.getHighlightColor(), "150 credits");
+        addBullet(info, "Luddic Path: Ascetic Penance Rations (200 credits)", spad, Misc.getHighlightColor(), "50 credits");
+        addBullet(info, "Pirates: Fringe Scavenger Platter (200 credits)", spad, Misc.getHighlightColor(), "100 credits");
+        addBullet(info, "Hegemony: Commissary Auxiliary Rations (200 credits)", spad, Misc.getHighlightColor(), "150 credits");
         addBullet(info, "Luddic Church: Pilgrim's Hearth Harvest Feast (200 credits)", spad, Misc.getHighlightColor(), "200 credits");
         addBullet(info, "Independents / Player: Loaded Spacer's Full-Burn Set (200 credits)", spad, Misc.getHighlightColor(), "200 credits");
-        addBullet(info, "Persean League: Archon's Grand Mezze Banquet (350 credits)", spad, Misc.getHighlightColor(), "350 credits");
-        addBullet(info, "Tri-Tachyon: Executive Synth-Steak Suite (450 credits)", spad, Misc.getHighlightColor(), "450 credits");
+        addBullet(info, "Persean League: Archon's Grand Mezze Banquet (200 credits)", spad, Misc.getHighlightColor(), "350 credits");
+        addBullet(info, "Tri-Tachyon: Executive Synth-Steak Suite (200 credits)", spad, Misc.getHighlightColor(), "450 credits");
         addBullet(info, "Sindrian Diktat: Supreme Executor's Volturnian Feast (600 credits)", spad, Misc.getHighlightColor(), "600 credits");
         unindent(info);
         info.addSpacer(4f);

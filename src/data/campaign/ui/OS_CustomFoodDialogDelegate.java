@@ -244,7 +244,7 @@ public class OS_CustomFoodDialogDelegate extends BaseCustomDialogDelegate {
 
             famine.description = "Roll 10 pallets of staple grain and preserved rations from your hold into the cantina's depleted pantry. Giant pressure cauldrons brew a piping-hot communal stew for starving dockworkers, families, and ratings.";
             famine.perkSummary = "-5% Supply Upkeep, +5% Max CR & +10% CR Recovery (Combat Ships), +10% Sensor Profile, -5% Acceleration (14 Days)";
-            famine.doctrineImpact = "Frontier Solidarity: Grants +5 Faction Reputation with " + (market != null ? market.getFaction().getDisplayName() : "the station") + " for humanitarian relief during a food crisis.";
+            famine.doctrineImpact = "Frontier Solidarity: Grants +5 Faction Reputation with " + ((market != null && market.getFaction() != null) ? market.getFaction().getDisplayName() : "the station") + " for humanitarian relief during a food crisis.";
             famine.durationDays = 14f;
             famine.isEmergencyRelief = true;
 
@@ -484,9 +484,29 @@ public class OS_CustomFoodDialogDelegate extends BaseCustomDialogDelegate {
             if (isDigesting) {
                 radioBtn.setEnabled(false);
                 radioBtn.setShowTooltipWhileInactive(true);
+                main.addTooltipTo(new com.fs.starfarer.api.ui.BaseTooltipCreator() {
+                    @Override
+                    public float getTooltipWidth(Object tooltipParam) {
+                        return 300f;
+                    }
+                    @Override
+                    public void createTooltip(TooltipMakerAPI tooltip, boolean expanded, Object tooltipParam) {
+                        tooltip.addPara("The fleet is still digesting their previous meal.", 0f, Misc.getNegativeHighlightColor(), Misc.getNegativeHighlightColor());
+                    }
+                }, radioBtn, TooltipMakerAPI.TooltipLocation.RIGHT);
             } else if (!opt.canAfford) {
                 radioBtn.setEnabled(false);
                 radioBtn.setShowTooltipWhileInactive(true);
+                main.addTooltipTo(new com.fs.starfarer.api.ui.BaseTooltipCreator() {
+                    @Override
+                    public float getTooltipWidth(Object tooltipParam) {
+                        return 350f;
+                    }
+                    @Override
+                    public void createTooltip(TooltipMakerAPI tooltip, boolean expanded, Object tooltipParam) {
+                        tooltip.addPara(opt.unaffordableReason, 0f, Misc.getNegativeHighlightColor(), Misc.getNegativeHighlightColor());
+                    }
+                }, radioBtn, TooltipMakerAPI.TooltipLocation.RIGHT);
             } else {
                 radioBtn.setEnabled(true);
             }

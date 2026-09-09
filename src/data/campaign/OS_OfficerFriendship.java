@@ -479,7 +479,7 @@ public class OS_OfficerFriendship {
 
         // Apply campaign doctrine for any officer who has reached Loyal Confidant status
         for (OfficerDataAPI data : officers) {
-            PersonAPI person = data.getPerson();
+            PersonAPI person = data != null ? data.getPerson() : null;
             if (person == null || person.isAICore()) continue;
             if (!isLoyal(person)) continue;
 
@@ -549,7 +549,7 @@ public class OS_OfficerFriendship {
         List<OfficerDataAPI> officers = fleet.getFleetData().getOfficersCopy();
         if (officers != null) {
             for (OfficerDataAPI data : officers) {
-                PersonAPI person = data.getPerson();
+                PersonAPI person = data != null ? data.getPerson() : null;
                 if (person == null) continue;
                 String buffKey = BUFF_ID_OFFICER + "_" + person.getId();
 

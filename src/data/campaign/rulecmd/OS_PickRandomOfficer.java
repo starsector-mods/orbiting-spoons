@@ -65,19 +65,19 @@ public class OS_PickRandomOfficer extends BaseCommandPlugin {
         List<MenuItem> items = new ArrayList<>();
         
         if (factionId.equals("hegemony")) {
-            items.add(new MenuItem("orbiting_spoon_order_hegemony_set", "Commissary Auxiliary Rations Set", 150));
+            items.add(new MenuItem("orbiting_spoon_order_hegemony_set", "Commissary Auxiliary Rations Set", 200));
         } else if (factionId.equals("tritachyon")) {
-            items.add(new MenuItem("orbiting_spoon_order_tritachyon_set", "Executive Synth-Steak Suite", 450));
+            items.add(new MenuItem("orbiting_spoon_order_tritachyon_set", "Executive Synth-Steak Suite", 200));
         } else if (factionId.equals("sindrian_diktat")) {
-            items.add(new MenuItem("orbiting_spoon_order_sindrian_set", "Supreme Executor's Volturnian Feast", 600));
+            items.add(new MenuItem("orbiting_spoon_order_sindrian_set", "Supreme Executor's Volturnian Feast", 200));
         } else if (factionId.equals("luddic_church")) {
             items.add(new MenuItem("orbiting_spoon_order_church_set", "Pilgrim's Hearth Harvest Feast", 200));
         } else if (factionId.equals("luddic_path")) {
-            items.add(new MenuItem("orbiting_spoon_order_path_set", "Ascetic Penance Rations Set", 50));
+            items.add(new MenuItem("orbiting_spoon_order_path_set", "Ascetic Penance Rations Set", 200));
         } else if (factionId.equals("pirates")) {
-            items.add(new MenuItem("orbiting_spoon_order_pirates_set", "Fringe Scavenger Platter Set", 100));
+            items.add(new MenuItem("orbiting_spoon_order_pirates_set", "Fringe Scavenger Platter Set", 200));
         } else if (factionId.equals("persean")) {
-            items.add(new MenuItem("orbiting_spoon_order_persean_set", "Archon's Grand Mezze Banquet", 350));
+            items.add(new MenuItem("orbiting_spoon_order_persean_set", "Archon's Grand Mezze Banquet", 200));
         } else {
             items.add(new MenuItem("orbiting_spoon_order_generic_set", "Loaded Spacer's Full-Burn Diner Set", 200));
         }
