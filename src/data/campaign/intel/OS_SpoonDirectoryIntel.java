@@ -488,72 +488,72 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
         addReviewCard(info, opad, spad,
             "[No Transponders: Cruorian Reeds] Sindrian Diktat: Volturnian Lobster Feast (600 credits)",
             getFactionColorSafe("sindrian_diktat"),
-            "Volturnian blue-shell lobster poached in fiery clarified pepper butter, served beneath glowing banners of the Lion's Guard. The meat is sweet, tender, and dripping in decadent fat. The catch? It takes thirty patrol cutters burning military-grade fuel to keep poachers from ever touching the reefs. Every bite is seasoned with the bitter sweat of Askonia's dockworkers and the paranoia of an authoritarian petrol-state. Pure, unadulterated decadence.",
+            "Sweet, tender blue-shell lobster poached in fiery clarified pepper butter. Every bite is seasoned with the sweat of Askonia's dockworkers and the paranoia of an authoritarian petrol-state. Pure decadence.",
             "Rating: 4.5 / 5 Spoons - \"Eat like a tyrant before the fuel tanks blow.\"",
-            "Bones's Field Rule: \"Never eat shellfish on a station where the security guards look twitchy. If the local ratings are eating turnip mash, you order turnip mash.\""
+            "Bones's Field Rule: \"Never eat shellfish when the guards look twitchy.\""
         );
 
         // 2. Luddic Church
         addReviewCard(info, opad, spad,
             "[Sectors Unknown: Gilead's Breadbasket] Luddic Church: Pilgrim's Hearth Harvest Feast (200 credits)",
             getFactionColorSafe("luddic_church"),
-            "Real bread. Real stone-ground barley. Real butter churned by human hands on Gilead, served in a quiet station refectory over solemn prayers of thanks. No chemical synthesizers, no nutrient paste, no corporate bullshit. Taking a bite of warm crumb that grew in honest soil will make even the most hardened Tri-Tachyon mercenary stare at the floor and reconsider their life choices. In a dying sector, this is holy.",
+            "Real stone-ground barley bread and hand-churned butter from Gilead. No chemical synthesizers or corporate nonsense. Taking a bite of warm crumb that grew in honest soil feels holy.",
             "Rating: 5.0 / 5 Spoons - \"Church for your stomach. Amen.\"",
-            "Bones's Field Rule: \"If the bread is holy, don't argue with the deacons. Chew slow, shut your mouth, and leave a modest tithe in the wooden bowl.\""
+            "Bones's Field Rule: \"Chew slow, shut your mouth, and leave a modest tithe.\""
         );
 
         // 3. Persean League
         addReviewCard(info, opad, spad,
             "[A Cook's Burn: Kazeron's Terraces] Persean League: Archon's Grand Mezze Banquet (350 credits)",
             getFactionColorSafe("persean"),
-            "Crisp flatbread, rosemary-rubbed waterfowl skewers, and chilled citrus liqueur served on glazed earthenware behind linen awnings. It is breezy, fragrant, and meticulously refined to stroke the egos of independent merchant factors while they haggle over tariff exemptions. A bit pretentious, but the citrus cut through engine grease like nothing else in the Core.",
+            "Rosemary-rubbed waterfowl skewers and chilled citrus liqueur. Meticulously refined to stroke merchant egos, but the citrus cuts through engine grease like nothing else in the Core.",
             "Rating: 4.0 / 5 Spoons - \"Good diplomacy on an empty stomach.\"",
-            "Bones's Field Rule: \"Sip the citrus wine, laugh at the oligarch's terrible jokes, and make sure your nav-officer checks the docking tariff fine print before the second course.\""
+            "Bones's Field Rule: \"Sip the wine, laugh at terrible jokes, and check docking tariffs.\""
         );
 
         // 4. Independents
         addReviewCard(info, opad, spad,
             "[Galley Confidential: The 24-Hour Airlock] Independents: Loaded Spacer's Full-Burn Set (200 credits)",
             getFactionColorSafe("independent"),
-            "The eternal backbone of the void. Battered blue Domain fabricator, cracked vinyl booths, thick root-vegetable beef stew, a stack of hot waffles slathered in butter, and scalded coffee. It's what freelance haulers, asteroid miners, and war-weary captains have been eating since the Collapse. Honest, greasy, and guaranteed to carry your crew through three consecutive hyperspace burns.",
+            "The eternal backbone of the void. Thick root-vegetable beef stew, a stack of hot waffles slathered in butter, and scalded coffee. Honest, greasy, and carries you through three hyperspace burns.",
             "Rating: 4.0 / 5 Spoons - \"Old reliable. The grease holds the void together.\"",
-            "Bones's Field Rule: \"The uglier the diner and the more dented the dispenser chute, the better the waffles. If the counter stool doesn't wobble, you're on the wrong station.\""
+            "Bones's Field Rule: \"If the counter stool doesn't wobble, you're on the wrong station.\""
         );
 
         // 5. Tri-Tachyon
         addReviewCard(info, opad, spad,
             "[Sectors Unknown: Port Tse Corporate Lounge] Tri-Tachyon: Executive Synth-Steak Suite (450 credits)",
             getFactionColorSafe("tritachyon"),
-            "A sterile, terrifying miracle of bio-molecular synthesis. Zero connective tissue, mathematically perfect fat-marbling, and laser-seared in an acoustic-damped lounge while glowing corporate tickers blink over your head. It tastes like whatever quarterly profit margin Tri-Tachyon's algorithmic flavor-models decided you wanted to taste. It's paired with nootropics that make you want to sign a non-disclosure agreement. Clean, expensive, and completely devoid of humanity.",
+            "A terrifying miracle of bio-molecular synthesis. Laser-seared and mathematically perfect, it tastes like quarterly profit margins and is paired with nootropics. Clean, expensive, and devoid of humanity.",
             "Rating: 3.5 / 5 Spoons - \"Don't ask what culture vat it came from.\"",
-            "Bones's Field Rule: \"If a Tri-Tachyon food engineer tells you a meat cut is 'conceptually delicious and biochemically optimized', do not sign the receipt.\""
+            "Bones's Field Rule: \"If food is 'biochemically optimized', do not sign the receipt.\""
         );
 
         // 6. Hegemony
         addReviewCard(info, opad, spad,
             "[The Nasty Chits: Chicomoztoc Gantry Mess] Hegemony: Commissary Auxiliary Rations (150 credits)",
             getFactionColorSafe("hegemony"),
-            "Dense hardtack that could plug a hull breach, and a bowl of iron-soy sludge hot enough to strip paint off a bulkhead. It has no garlic, no pepper, no joy, and precisely the caloric density demanded by High Hegemon naval ordinance 44-A. It tastes like grey primer and obedience. Eat it with black chicory coffee before a twelve-hour patrol shift. It won't warm your soul, but your weapons officer won't faint at the tactical console either.",
+            "Dense hardtack that could plug a hull breach, and boiling iron-soy sludge. No garlic, no pepper, no joy. Tastes like grey primer and obedience. Eat before your twelve-hour shift.",
             "Rating: 2.5 / 5 Spoons - \"Eat it standing up. Tastes like martial law.\"",
-            "Bones's Field Rule: \"Never complain about the hardtack to the cook. The cook has a wrench, an apron covered in soy broth, and friends in the military police.\""
+            "Bones's Field Rule: \"Never complain. The cook has friends in the military police.\""
         );
 
         // 7. Pirates
         addReviewCard(info, opad, spad,
             "[No Transponders: Donkers Salvage Yards] Pirates: Fringe Scavenger Platter (100 credits)",
             getFactionColorSafe("pirates"),
-            "Mystery ribs charred over open engine manifolds, drowned in peppery fungal sludge to cover up the rot, slammed onto sheet metal next to moonshine that could dissolve your shields. Scarred corsairs kick the machine when it jams and roll dice for the scraps. You will experience either profound animal euphoria or catastrophic gastrointestinal failure within forty minutes. Roll the dice, spacer.",
+            "Mystery ribs charred over open engine manifolds, drowned in peppery fungal sludge to cover the rot. You will experience either animal euphoria or catastrophic gastrointestinal failure. Roll the dice.",
             "Rating: 2.0 / 5 Spoons - \"Hazard pay required. I loved every filthy bite.\"",
-            "Bones's Field Rule: \"Keep your back to the bulkhead, your sidearm thumb-break unclasped, and never ask what animal had four ribs that thick.\""
+            "Bones's Field Rule: \"Keep your sidearm unclasped, and never ask what animal it was.\""
         );
 
         // 8. Luddic Path
         addReviewCard(info, opad, spad,
             "[Sectors Unknown: Cell Bunker Galley] Luddic Path: Ascetic Penance Broth (50 credits)",
             getFactionColorSafe("luddic_path"),
-            "Tastes like crushed gravel simmered in uncalibrated reactor runoff. The cell fighters hammer off the fabricator's seasoning injectors with chisels because pleasure is a sin of the Machine. Salt is considered an unholy distraction from holy martyrdom. If their torpedo aim was as crude as this turnip mash, the Sector would finally have peace. Buy it only if you are twenty light-years out of fuel and facing active starvation.",
+            "Tastes like crushed gravel simmered in reactor runoff. Cell fighters hammered off the seasoning injectors because pleasure is a sin. Buy only if facing active starvation.",
             "Rating: 0.5 / 5 Spoons - \"Penance, indeed. May the Prophet forgive the cook.\"",
-            "Bones's Field Rule: \"Do not reach for the salt shaker. There is no salt shaker, and asking for one will start a thirty-minute theological tribunal.\""
+            "Bones's Field Rule: \"Do not ask for salt. It will start a theological tribunal.\""
         );
 
         info.addSpacer(10f);
@@ -649,12 +649,12 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
 
         info.addPara("Informal Officer Mentoring (Officer XP & Fleet Bonus XP):", Misc.getHighlightColor(), spad);
         info.addPara(
-            "Inviting bridge officers to join you at 'The Orbiting Spoon' serves as an informal mentoring environment away from bridge klaxons. Sponsoring a hot meal spread awards direct Officer XP to your dining companion and grants Fleet Bonus XP (providing 100% bonus XP return when Story Points are spent). Dining also builds Camaraderie, advancing relationships from Professional Acquaintance to Trusted Comrade (50%) and Loyal Confidant (75%).", Misc.getTextColor(), spad);
+            "Sponsoring a hot meal spread awards Officer XP and grants Fleet Bonus XP. Dining builds Camaraderie, advancing relationships to Trusted Comrade (50%) and Loyal Confidant (75%).", Misc.getTextColor(), spad);
         info.addSpacer(4f);
 
         info.addPara("Wardroom Tactical Debriefs (Skill Retraining):", Misc.getHighlightColor(), spad);
         info.addPara(
-            "Once an officer reaches Trusted Comrade status (50% Camaraderie), commanders can hold a private Wardroom Tactical Debrief over hot dinner plates. By reviewing telemetry logs, simulator records, and flight habits, the officer can unlearn an unwanted combat skill to refund 1 skill point, allowing immediate reallocation in the fleet officer screen.", Misc.getTextColor(), spad);
+            "At Trusted Comrade status (50% Camaraderie), officers can unlearn a combat skill to refund 1 skill point.", Misc.getTextColor(), spad);
         bullet(info);
         addBullet(info, "Debriefing Cost: 1 Story Point (100% bonus XP returned) and 100,000 credits to cover private catering, flight recorder collation, and tactical telemetry data.", spad, Misc.getHighlightColor(), "1 Story Point", "100,000 credits");
         addBullet(info, "Elite Skill Refund: If the unlearned skill was Elite, the Story Point previously spent to elevate it is fully refunded.", spad, Misc.getPositiveHighlightColor(), "Story Point previously spent to elevate it is fully refunded");
@@ -712,12 +712,12 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
 
         info.addPara("Spaceport Infrastructure Requirements (Market Size 4+):", Misc.getHighlightColor(), spad);
         info.addPara(
-            "'The Orbiting Spoon' culinary fabricators are massive, jury-rigged Domain-era relics requiring high-voltage industrial reactor taps and dedicated coolant lines. Consequently, they are exclusively installed in portside bars of developed stations and colonies with Market Size 4 or larger belonging to recognized Core factions (Hegemony, Tri-Tachyon, Sindrian Diktat, Luddic Church, Luddic Path, Persean League, Pirates, Independents, and Player-founded colonies). Frontier outposts, hidden caches, and small settlements cannot supply the necessary power to keep them operational.", Misc.getTextColor(), spad);
+            "Fabricators require high-voltage industrial reactor taps. They are exclusively installed in portside bars of developed Core faction colonies (Market Size 4+).", Misc.getTextColor(), spad);
         info.addSpacer(4f);
 
         info.addPara("Standardized Commissary Tariffs (Flat 50 to 600 Credits):", Misc.getHighlightColor(), spad);
         info.addPara(
-            "To ensure all spacers and commanders can afford hot food regardless of fleet tonnage, diner meals are covered by port authority commissary subsidies. Prices are flat and standardized between 50 and 600 credits (averaging 200 credits), without punishing per-crew scaling multipliers:", Misc.getTextColor(), spad);
+            "Diner meals are subsidized, avoiding per-crew scaling multipliers. Prices are flat based on the local faction:", Misc.getTextColor(), spad);
         bullet(info);
         addBullet(info, "Luddic Path: Ascetic Penance Rations (50 credits)", spad, Misc.getHighlightColor(), "50 credits");
         addBullet(info, "Pirates: Fringe Scavenger Platter (100 credits)", spad, Misc.getHighlightColor(), "100 credits");
