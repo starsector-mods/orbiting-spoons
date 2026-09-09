@@ -496,8 +496,8 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
         addReviewCard(info, opad, spad,
             "[No Transponders: Cruorian Reeds] Sindrian Diktat: Volturnian Lobster Feast (200 credits)",
             getFactionColorSafe("sindrian_diktat"),
-            "Sweet, tender blue-shell lobster poached in fiery clarified pepper butter. Every bite is seasoned with the sweat of Askonia's dockworkers and the paranoia of an authoritarian petrol-state. Pure decadence.", "Sweet, tender blue-shell lobster poached in fiery clarified pepper butter, served with Askonia-grown root vegetables. Every bite is seasoned with the sweat of overworked dockhands, the relentless hum of Sindrian refineries, and the crushing paranoia of an authoritarian petrol-state. It is pure, unabashed decadence in a sector starved of joy.",
-            "Rating: 4.5 / 5 Spoons - \"Eat like a tyrant before the fuel tanks blow.\"",
+            "Sweet, tender blue-shell lobster poached in fiery clarified pepper butter. Every bite is seasoned with the sweat of Askonia's dockworkers and the paranoia of an authoritarian petrol-state. Pure decadence.", "Sweet, tender blue-shell lobster poached in fiery clarified pepper butter, served with Askonia-grown root vegetables. Every bite is seasoned with the sweat of overworked dockhands, the relentless hum of Sindrian refineries, and the crushing paranoia of an authoritarian petrol-state. It is pure, unabashed decadence in a sector starved of joy. The so-called 'critics' at the Askonia Culinary Board call this dish 'unrefined'. They're cowards who wouldn't know real flavor unless the Executor ordered them to taste it.",
+"Rating: 4.5 / 5 Spoons - \"Eat like a tyrant before the fuel tanks blow.\"",
             "Bones's Field Rule: \"Never eat shellfish when the guards look twitchy.\""
         );
 
@@ -505,8 +505,8 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
         addReviewCard(info, opad, spad,
             "[Sectors Unknown: Gilead's Breadbasket] Luddic Church: Pilgrim's Hearth Harvest Feast (200 credits)",
             getFactionColorSafe("luddic_church"),
-            "Real stone-ground barley bread and hand-churned butter from Gilead. No chemical synthesizers or corporate nonsense. Taking a bite of warm crumb that grew in honest soil feels holy.", "Real stone-ground barley bread, hand-churned butter from Gilead's soil, and thick vegetable stew. No chemical synthesizers, no corporate branding, no artificial flavor profiles. Taking a bite of warm crumb that grew in honest, sunlit dirt feels less like eating and more like participating in a holy sacrament for the exhausted spacer soul.",
-            "Rating: 5.0 / 5 Spoons - \"Church for your stomach. Amen.\"",
+            "Real stone-ground barley bread and hand-churned butter from Gilead. No chemical synthesizers or corporate nonsense. Taking a bite of warm crumb that grew in honest soil feels holy.", "Real stone-ground barley bread, hand-churned butter from Gilead's soil, and thick vegetable stew. No chemical synthesizers, no corporate branding, no artificial flavor profiles. Taking a bite of warm crumb that grew in honest, sunlit dirt feels less like eating and more like participating in a holy sacrament for the exhausted spacer soul. Core World food bloggers complain about the lack of exotic spices here. Let them eat their sterile nutrient paste; they lack the spiritual grit to appreciate honest dirt.",
+"Rating: 5.0 / 5 Spoons - \"Church for your stomach. Amen.\"",
             "Bones's Field Rule: \"Chew slow, shut your mouth, and leave a modest tithe.\""
         );
 
@@ -514,8 +514,8 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
         addReviewCard(info, opad, spad,
             "[A Cook's Burn: Kazeron's Terraces] Persean League: Archon's Grand Mezze Banquet (200 credits)",
             getFactionColorSafe("persean"),
-            "Rosemary-rubbed waterfowl skewers and chilled citrus liqueur. Meticulously refined to stroke merchant egos, but the citrus cuts through engine grease like nothing else in the Core.", "Rosemary-rubbed waterfowl skewers, chilled citrus liqueur, and perfectly toasted flatbread. It is meticulously refined, obviously designed to stroke the egos of bloated merchant princes and petty planetary nobles. Yet, undeniably, the sharp citrus cuts through a week of recycled engine grease and stale air like nothing else in the Core Worlds.",
-            "Rating: 4.0 / 5 Spoons - \"Good diplomacy on an empty stomach.\"",
+            "Rosemary-rubbed waterfowl skewers and chilled citrus liqueur. Meticulously refined to stroke merchant egos, but the citrus cuts through engine grease like nothing else in the Core.", "Rosemary-rubbed waterfowl skewers, chilled citrus liqueur, and perfectly toasted flatbread. It is meticulously refined, obviously designed to stroke the egos of bloated merchant princes and petty planetary nobles. Yet, undeniably, the sharp citrus cuts through a week of recycled engine grease and stale air like nothing else in the Core Worlds. The high-society reviewers on Kazeron pretend this is high art. It's just good bird and strong booze, dressed up for people with too many credits and no real combat experience.",
+"Rating: 4.0 / 5 Spoons - \"Good diplomacy on an empty stomach.\"",
             "Bones's Field Rule: \"Sip the wine, laugh at terrible jokes, and check docking tariffs.\""
         );
 
@@ -523,8 +523,8 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
         addReviewCard(info, opad, spad,
             "[Galley Confidential: The 24-Hour Airlock] Independents: Loaded Spacer's Full-Burn Set (200 credits)",
             getFactionColorSafe("independent"),
-            "The eternal backbone of the void. Thick root-vegetable beef stew, a stack of hot waffles slathered in butter, and scalded coffee. Honest, greasy, and carries you through three hyperspace burns.", "The eternal backbone of the void. A thick, root-vegetable beef stew, a stack of hot waffles slathered in butter, and violently scalded coffee. It's honest, it's greasy, and it carries enough caloric density to carry a watchstander through three consecutive hyperspace jumps without a break. It's not pretty, but it keeps the sector running.",
-            "Rating: 4.0 / 5 Spoons - \"Old reliable. The grease holds the void together.\"",
+            "The eternal backbone of the void. Thick root-vegetable beef stew, a stack of hot waffles slathered in butter, and scalded coffee. Honest, greasy, and carries you through three hyperspace burns.", "The eternal backbone of the void. A thick, root-vegetable beef stew, a stack of hot waffles slathered in butter, and violently scalded coffee. It's honest, it's greasy, and it carries enough caloric density to carry a watchstander through three consecutive hyperspace jumps without a break. It's not pretty, but it keeps the sector running. Fancy syndicate critics call this 'peasant slop'. I'd like to see those soft-handed snobs survive a double-shift in a leaky engine room on anything less.",
+"Rating: 4.0 / 5 Spoons - \"Old reliable. The grease holds the void together.\"",
             "Bones's Field Rule: \"If the counter stool doesn't wobble, you're on the wrong station.\""
         );
 
@@ -532,8 +532,8 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
         addReviewCard(info, opad, spad,
             "[Sectors Unknown: Port Tse Corporate Lounge] Tri-Tachyon: Executive Synth-Steak Suite (200 credits)",
             getFactionColorSafe("tritachyon"),
-            "A terrifying miracle of bio-molecular synthesis. Laser-seared and mathematically perfect, it tastes like quarterly profit margins and is paired with nootropics. Clean, expensive, and devoid of humanity.", "A terrifying miracle of bio-molecular synthesis. Laser-seared and mathematically perfect, it tastes like quarterly profit margins, boardroom sterility, and is paired with a side of cognitive-enhancing nootropics. It is clean, unapologetically expensive, and completely devoid of human warmth. You eat it, you perform better, and you try not to think about the culture vats.",
-            "Rating: 3.5 / 5 Spoons - \"Don't ask what culture vat it came from.\"",
+            "A terrifying miracle of bio-molecular synthesis. Laser-seared and mathematically perfect, it tastes like quarterly profit margins and is paired with nootropics. Clean, expensive, and devoid of humanity.", "A terrifying miracle of bio-molecular synthesis. Laser-seared and mathematically perfect, it tastes like quarterly profit margins, boardroom sterility, and is paired with a side of cognitive-enhancing nootropics. It is clean, unapologetically expensive, and completely devoid of human warmth. You eat it, you perform better, and you try not to think about the culture vats. Corporate taste-testers rate this a perfect 10/10 every quarter. Of course they do; their bonuses depend on it, and half their tastebuds are cybernetic anyway.",
+"Rating: 3.5 / 5 Spoons - \"Don't ask what culture vat it came from.\"",
             "Bones's Field Rule: \"If food is 'biochemically optimized', do not sign the receipt.\""
         );
 
@@ -541,8 +541,8 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
         addReviewCard(info, opad, spad,
             "[The Nasty Chits: Chicomoztoc Gantry Mess] Hegemony: Commissary Auxiliary Rations (200 credits)",
             getFactionColorSafe("hegemony"),
-            "Dense hardtack that could plug a hull breach, and boiling iron-soy sludge. No garlic, no pepper, no joy. Tastes like grey primer and obedience. Eat before your twelve-hour shift.", "Dense hardtack that could plug a micro-meteorite hull breach, and boiling iron-soy sludge. No garlic, no pepper, no joy. It tastes like grey primer paint, martial law, and blind obedience to the chain of command. Eat it quickly, standing up, before your twelve-hour shift begins. The Hegemony does not pay you to enjoy your meals.",
-            "Rating: 2.5 / 5 Spoons - \"Eat it standing up. Tastes like martial law.\"",
+            "Dense hardtack that could plug a hull breach, and boiling iron-soy sludge. No garlic, no pepper, no joy. Tastes like grey primer and obedience. Eat before your twelve-hour shift.", "Dense hardtack that could plug a micro-meteorite hull breach, and boiling iron-soy sludge. No garlic, no pepper, no joy. It tastes like grey primer paint, martial law, and blind obedience to the chain of command. Eat it quickly, standing up, before your twelve-hour shift begins. The Hegemony does not pay you to enjoy your meals. The Hegemony quartermasters insist this meets all nutritional baselines. They aren't critics, they're spreadsheet jockeys who think 'flavor' is a breach of military discipline.",
+"Rating: 2.5 / 5 Spoons - \"Eat it standing up. Tastes like martial law.\"",
             "Bones's Field Rule: \"Never complain. The cook has friends in the military police.\""
         );
 
@@ -550,8 +550,8 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
         addReviewCard(info, opad, spad,
             "[No Transponders: Donkers Salvage Yards] Pirates: Fringe Scavenger Platter (200 credits)",
             getFactionColorSafe("pirates"),
-            "Mystery ribs charred over open engine manifolds, drowned in peppery fungal sludge to cover the rot. You will experience either animal euphoria or catastrophic gastrointestinal failure. Roll the dice.", "Mystery ribs charred over open engine manifolds, drowned in a peppery fungal sludge to cover the creeping rot. You will experience either a rush of animal euphoria or catastrophic gastrointestinal failure. It's a culinary roll of the dice, much like trusting a pirate with your docking fees. Eat at your own extreme peril.",
-            "Rating: 2.0 / 5 Spoons - \"Hazard pay required. I loved every filthy bite.\"",
+            "Mystery ribs charred over open engine manifolds, drowned in peppery fungal sludge to cover the rot. You will experience either animal euphoria or catastrophic gastrointestinal failure. Roll the dice.", "Mystery ribs charred over open engine manifolds, drowned in a peppery fungal sludge to cover the creeping rot. You will experience either a rush of animal euphoria or catastrophic gastrointestinal failure. It's a culinary roll of the dice, much like trusting a pirate with your docking fees. Eat at your own extreme peril. The bourgeois food columnists back in the Core would faint just smelling this. Good. Let the core stay soft; this is food for those who actually live in the Black.",
+"Rating: 2.0 / 5 Spoons - \"Hazard pay required. I loved every filthy bite.\"",
             "Bones's Field Rule: \"Keep your sidearm unclasped, and never ask what animal it was.\""
         );
 
@@ -559,8 +559,8 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
         addReviewCard(info, opad, spad,
             "[Sectors Unknown: Cell Bunker Galley] Luddic Path: Ascetic Penance Broth (200 credits)",
             getFactionColorSafe("luddic_path"),
-            "Tastes like crushed gravel simmered in reactor runoff. Cell fighters hammered off the seasoning injectors because pleasure is a sin. Buy only if facing active starvation.", "Tastes like crushed gravel simmered in irradiated reactor runoff. The Path's cell fighters intentionally hammered off the seasoning injectors because experiencing culinary pleasure is a sin against Ludd. It is bleak, gritty, and tastes of impending martyrdom. Purchase this only if you are facing active starvation or wish to punish yourself for your worldly transgressions.",
-            "Rating: 0.5 / 5 Spoons - \"Penance, indeed. May the Prophet forgive the cook.\"",
+            "Tastes like crushed gravel simmered in reactor runoff. Cell fighters hammered off the seasoning injectors because pleasure is a sin. Buy only if facing active starvation.", "Tastes like crushed gravel simmered in irradiated reactor runoff. The Path's cell fighters intentionally hammered off the seasoning injectors because experiencing culinary pleasure is a sin against Ludd. It is bleak, gritty, and tastes of impending martyrdom. Purchase this only if you are facing active starvation or wish to punish yourself for your worldly transgressions. No critic has ever survived reviewing this long enough to publish. I'm the only one crazy enough to eat it twice.",
+"Rating: 0.5 / 5 Spoons - \"Penance, indeed. May the Prophet forgive the cook.\"",
             "Bones's Field Rule: \"Do not ask for salt. It will start a theological tribunal.\""
         );
 
