@@ -282,6 +282,8 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
         float spad = 3f;
         float contentWidth = Math.max(260f, width - 12f);
 
+        info.setParaInsigniaLarge();
+
         // Intro narrative
         info.addPara(
             "An underground spacer directory and culinary field guide tracking intact Domain-era automated food fabricators-colloquially known as 'The Orbiting Spoon'. Installed in station concourses and port bars across the Core Worlds, these indestructible machines dispense warm regional meals to deckhands and fleet commanders alike.",
@@ -294,13 +296,14 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
         Color dark = Misc.getDarkPlayerColor();
         Color bright = Misc.getBrightPlayerColor();
 
-        float btnHeight = 22f;
+        float btnHeight = 26f;
         float gap = 4f;
         float btnWidth = (contentWidth - gap * 2f) / 3f;
 
         info.addSectionHeading("Directory Navigation (Select Tab)", Alignment.MID, opad);
 
         TooltipMakerAPI t1 = info.beginSubTooltip(btnWidth);
+        t1.setButtonFontVictor14();
         t1.addButton(
             (activeTab == DirectoryTab.REGISTRY ? "> " : "") + "1. Registry",
             TAB_REGISTRY,
@@ -311,6 +314,7 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
         info.endSubTooltip();
 
         TooltipMakerAPI t2 = info.beginSubTooltip(btnWidth);
+        t2.setButtonFontVictor14();
         t2.addButton(
             (activeTab == DirectoryTab.REVIEWS ? "> " : "") + "2. Sectors Unknown",
             TAB_REVIEWS,
@@ -321,6 +325,7 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
         info.endSubTooltip();
 
         TooltipMakerAPI t3 = info.beginSubTooltip(btnWidth);
+        t3.setButtonFontVictor14();
         t3.addButton(
             (activeTab == DirectoryTab.REGULATIONS ? "> " : "") + "3. Fleet Morale",
             TAB_REGULATIONS,
@@ -359,6 +364,7 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
      * TAB 1: Sector Registry Table (Read from left to right)
      */
     protected void renderRegistryTab(TooltipMakerAPI info, float width, float opad, float spad) {
+        info.setParaInsigniaLarge();
         info.addSectionHeading("Operational Fabricators (Sorted by Proximity)", Alignment.MID, opad);
         info.addPara("Review operational facilities below. Centering this log on the Star Map immediately pans to and tracks the nearest operational diner.", Misc.getGrayColor(), spad);
 
@@ -465,6 +471,7 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
      * Book: "Sectors Unknown: Galley Confidential across the Persean Void"
      */
     protected void renderReviewsTab(TooltipMakerAPI info, float width, float opad, float spad) {
+        info.setParaInsigniaLarge();
         info.addSectionHeading("Sectors Unknown: Galley Confidential across the Persean Void", Alignment.MID, opad);
 
         info.addPara(
@@ -554,6 +561,7 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
 
     protected void addReviewCard(TooltipMakerAPI info, float opad, float spad, String heading, Color factionColor, String review, String rating, String proTip) {
         info.addSectionHeading(heading, Alignment.LMID, opad);
+        info.setParaInsigniaLarge();
         info.addPara(review, Misc.getTextColor(), spad);
         LabelAPI rLabel = info.addPara(rating, Misc.getHighlightColor(), spad);
         rLabel.setHighlightColor(Misc.getBrightPlayerColor());
@@ -572,6 +580,7 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
     protected void renderMoraleAndFieldGuideTab(TooltipMakerAPI info, float width, float opad, float spad) {
         info.setTextWidthOverride(0f);
         info.setBulletedListMode(null);
+        info.setParaInsigniaLarge();
         info.addSectionHeading("Fleet Morale & Naval Field Guide", Alignment.MID, opad);
 
         // Section A: Current Fleet Morale & Shore Leave Status
@@ -592,7 +601,7 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
             float colParam = Math.round(usableWidth * 0.35f);
             float colVal = usableWidth - colParam - 4f;
 
-            info.beginTable(Misc.getBasePlayerColor(), Misc.getDarkPlayerColor(), Misc.getBrightPlayerColor(), 20f,
+            info.beginTable(Misc.getBasePlayerColor(), Misc.getDarkPlayerColor(), Misc.getBrightPlayerColor(), 22f,
                 "Metric", colParam,
                 "Current Fleet Status", colVal
             );
@@ -869,6 +878,7 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
 
     private void addBullet(TooltipMakerAPI info, String text, float pad, Color highlightColor, String... highlights) {
         info.setTextWidthOverride(0f);
+        info.setParaInsigniaLarge();
         LabelAPI label = info.addPara(text, pad);
         if (highlights != null && highlights.length > 0) {
             label.setHighlight(highlights);
