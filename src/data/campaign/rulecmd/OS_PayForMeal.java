@@ -72,8 +72,16 @@ public class OS_PayForMeal extends BaseCommandPlugin {
             if (!reaction.isEmpty()) {
                 dialog.getTextPanel().addParagraph(reaction, Misc.getTextColor());
             }
-            int delta = data.campaign.OS_OfficerFriendship.getMealCamaraderieDelta(officer, factionId);
-            data.campaign.OS_OfficerFriendship.addFriendship(officer, delta, dialog);
+            List<com.fs.starfarer.api.characters.PersonAPI> allOfficers = OS_PickRandomOfficer.getHumanOfficers();
+            if (allOfficers.isEmpty()) {
+                int delta = data.campaign.OS_OfficerFriendship.getMealCamaraderieDelta(officer, factionId);
+                data.campaign.OS_OfficerFriendship.addFriendship(officer, delta, dialog);
+            } else {
+                for (com.fs.starfarer.api.characters.PersonAPI p : allOfficers) {
+                    int delta = data.campaign.OS_OfficerFriendship.getMealCamaraderieDelta(p, factionId);
+                    data.campaign.OS_OfficerFriendship.addFriendship(p, delta, dialog);
+                }
+            }
         }
 
         // Award Dining Experience (Officer XP + Fleet Bonus XP or Crew Bonus XP)

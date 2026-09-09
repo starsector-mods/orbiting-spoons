@@ -55,8 +55,16 @@ public class OS_CulinaryFeast extends BaseCommandPlugin {
                 if (!reaction.isEmpty()) {
                     dialog.getTextPanel().addParagraph(reaction, Misc.getTextColor());
                 }
-                int delta = OS_OfficerFriendship.getMealCamaraderieDelta(officer, "lobster_feast");
-                OS_OfficerFriendship.addFriendship(officer, delta, dialog);
+                List<PersonAPI> allOfficers = OS_PickRandomOfficer.getHumanOfficers();
+                if (allOfficers.isEmpty()) {
+                    int delta = OS_OfficerFriendship.getMealCamaraderieDelta(officer, "lobster_feast");
+                    OS_OfficerFriendship.addFriendship(officer, delta, dialog);
+                } else {
+                    for (PersonAPI p : allOfficers) {
+                        int delta = OS_OfficerFriendship.getMealCamaraderieDelta(p, "lobster_feast");
+                        OS_OfficerFriendship.addFriendship(p, delta, dialog);
+                    }
+                }
             }
 
             OS_OfficerMentoring.awardDiningExperience(dialog, officer);
@@ -85,8 +93,16 @@ public class OS_CulinaryFeast extends BaseCommandPlugin {
                 if (!reaction.isEmpty()) {
                     dialog.getTextPanel().addParagraph(reaction, Misc.getTextColor());
                 }
-                int delta = OS_OfficerFriendship.getMealCamaraderieDelta(officer, "luxury_feast");
-                OS_OfficerFriendship.addFriendship(officer, delta, dialog);
+                List<PersonAPI> allOfficers = OS_PickRandomOfficer.getHumanOfficers();
+                if (allOfficers.isEmpty()) {
+                    int delta = OS_OfficerFriendship.getMealCamaraderieDelta(officer, "luxury_feast");
+                    OS_OfficerFriendship.addFriendship(officer, delta, dialog);
+                } else {
+                    for (PersonAPI p : allOfficers) {
+                        int delta = OS_OfficerFriendship.getMealCamaraderieDelta(p, "luxury_feast");
+                        OS_OfficerFriendship.addFriendship(p, delta, dialog);
+                    }
+                }
             }
 
             OS_OfficerMentoring.awardDiningExperience(dialog, officer);
@@ -125,8 +141,16 @@ public class OS_CulinaryFeast extends BaseCommandPlugin {
                 if (!reaction.isEmpty()) {
                     dialog.getTextPanel().addParagraph(reaction, Misc.getTextColor());
                 }
-                int delta = OS_OfficerFriendship.getMealCamaraderieDelta(officer, "famine_stew");
-                OS_OfficerFriendship.addFriendship(officer, delta, dialog);
+                List<PersonAPI> allOfficers = OS_PickRandomOfficer.getHumanOfficers();
+                if (allOfficers.isEmpty()) {
+                    int delta = OS_OfficerFriendship.getMealCamaraderieDelta(officer, "famine_stew");
+                    OS_OfficerFriendship.addFriendship(officer, delta, dialog);
+                } else {
+                    for (PersonAPI p : allOfficers) {
+                        int delta = OS_OfficerFriendship.getMealCamaraderieDelta(p, "famine_stew");
+                        OS_OfficerFriendship.addFriendship(p, delta, dialog);
+                    }
+                }
             }
 
             OS_OfficerMentoring.awardDiningExperience(dialog, officer);

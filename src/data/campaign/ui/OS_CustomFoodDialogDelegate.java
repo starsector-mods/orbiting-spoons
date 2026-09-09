@@ -140,8 +140,20 @@ public class OS_CustomFoodDialogDelegate extends BaseCustomDialogDelegate {
         regional.doctrineImpact = OS_ShoreLeaveBuff.getMealPerkSummary(factionId);
         regional.durationDays = "independent".equalsIgnoreCase(factionId) ? OS_ShoreLeaveBuff.INDIE_DURATION : OS_ShoreLeaveBuff.DEFAULT_DURATION;
 
+        List<PersonAPI> allOfficers = OS_PickRandomOfficer.getHumanOfficers();
         if (officer != null) {
-            regional.officerOpinion = officer.getNameString() + "'s Palate: " + OS_OfficerFriendship.getOfficerFoodPreferenceHint(officer, factionId);
+            if (allOfficers.size() > 1) {
+                StringBuilder sb = new StringBuilder();
+                sb.append("Wardroom Palates (").append(allOfficers.size()).append(" Officers Seated):");
+                for (PersonAPI p : allOfficers) {
+                    int delta = OS_OfficerFriendship.getMealCamaraderieDelta(p, factionId);
+                    String tag = (delta >= 15) ? "[Liked (+" + delta + "%)]" : (delta < 0 ? "[Disliked (" + delta + "%)]" : "[Neutral (+" + delta + "%)]");
+                    sb.append("\n- ").append(p.getNameString()).append(" (").append(p.getPersonalityAPI() != null ? p.getPersonalityAPI().getDisplayName() : "Steady").append("): ").append(tag);
+                }
+                regional.officerOpinion = sb.toString();
+            } else {
+                regional.officerOpinion = officer.getNameString() + "'s Palate: " + OS_OfficerFriendship.getOfficerFoodPreferenceHint(officer, factionId);
+            }
         } else {
             regional.officerOpinion = "Bulk galley preparation ladled in pressure cauldrons for off-duty watchstanders.";
         }
@@ -171,7 +183,11 @@ public class OS_CustomFoodDialogDelegate extends BaseCustomDialogDelegate {
         lobster.durationDays = 21f;
 
         if (officer != null) {
-            lobster.officerOpinion = officer.getNameString() + "'s Palate: Universally revered (+15% Camaraderie). Highly celebrated by Steady captains and predatory Aggressive vanguard officers.";
+            if (allOfficers.size() > 1) {
+                lobster.officerOpinion = "Wardroom Palates (" + allOfficers.size() + " Officers Seated): Universally revered (+15% Camaraderie to all officers). Highly celebrated across all combat doctrines.";
+            } else {
+                lobster.officerOpinion = officer.getNameString() + "'s Palate: Universally revered (+15% Camaraderie). Highly celebrated by Steady captains and predatory Aggressive vanguard officers.";
+            }
         } else {
             lobster.officerOpinion = "An unforgettable luxury banquet that elevates the entire fleet's morale across every deck.";
         }
@@ -199,7 +215,11 @@ public class OS_CustomFoodDialogDelegate extends BaseCustomDialogDelegate {
         luxury.durationDays = 21f;
 
         if (officer != null) {
-            luxury.officerOpinion = officer.getNameString() + "'s Palate: Universally appreciated (+12% Camaraderie). A solemn and refined reminder of what the Sector strives to rebuild.";
+            if (allOfficers.size() > 1) {
+                luxury.officerOpinion = "Wardroom Palates (" + allOfficers.size() + " Officers Seated): Universally appreciated (+12% Camaraderie to all officers). A solemn and refined reminder of Old Earth culture.";
+            } else {
+                luxury.officerOpinion = officer.getNameString() + "'s Palate: Universally appreciated (+12% Camaraderie). A solemn and refined reminder of what the Sector strives to rebuild.";
+            }
         } else {
             luxury.officerOpinion = "A rare taste of pre-Collapse civilization shared among your command crew and senior ratings.";
         }
@@ -229,7 +249,11 @@ public class OS_CustomFoodDialogDelegate extends BaseCustomDialogDelegate {
             famine.isEmergencyRelief = true;
 
             if (officer != null) {
-                famine.officerOpinion = officer.getNameString() + "'s Palate: Deeply respected (+10% Camaraderie). Even hardened combat commanders honor leadership that protects civilian lives.";
+                if (allOfficers.size() > 1) {
+                    famine.officerOpinion = "Wardroom Palates (" + allOfficers.size() + " Officers Seated): Deeply respected (+10% Camaraderie to all officers). Even hardened combat commanders honor leadership that protects civilian lives.";
+                } else {
+                    famine.officerOpinion = officer.getNameString() + "'s Palate: Deeply respected (+10% Camaraderie). Even hardened combat commanders honor leadership that protects civilian lives.";
+                }
             } else {
                 famine.officerOpinion = "The crew and local dockworkers break bread together in solemn, unforgettable gratitude.";
             }
@@ -356,9 +380,21 @@ public class OS_CustomFoodDialogDelegate extends BaseCustomDialogDelegate {
 
         String diningPartyText;
         if (officer != null) {
-            int fs = OS_OfficerFriendship.getFriendship(officer);
-            String tier = OS_OfficerFriendship.getTierName(fs);
-            diningPartyText = "Dining Party: Wardroom Table with " + officer.getNameString() + " (Level " + officer.getStats().getLevel() + ", Camaraderie: " + fs + "% [" + tier + "])";
+            List<PersonAPI> allOfficers = OS_PickRandomOfficer.getHumanOfficers();
+            if (allOfficers.size() > 1) {
+                StringBuilder sb = new StringBuilder();
+                sb.append("Dining Party: Wardroom Command Staff (").append(allOfficers.size()).append(" Officers Seated: ");
+                for (int i = 0; i < allOfficers.size(); i++) {
+                    if (i > 0) sb.append(", ");
+                    sb.append(allOfficers.get(i).getNameString());
+                }
+                sb.append(")");
+                diningPartyText = sb.toString();
+            } else {
+                int fs = OS_OfficerFriendship.getFriendship(officer);
+                String tier = OS_OfficerFriendship.getTierName(fs);
+                diningPartyText = "Dining Party: Wardroom Table with " + officer.getNameString() + " (Level " + officer.getStats().getLevel() + ", Camaraderie: " + fs + "% [" + tier + "])";
+            }
         } else {
             int crew = (playerFleet != null && playerFleet.getCargo() != null) ? (int) playerFleet.getCargo().getCrew() : 0;
             if (crew > 0) {
@@ -367,7 +403,7 @@ public class OS_CustomFoodDialogDelegate extends BaseCustomDialogDelegate {
                 diningPartyText = "Dining Party: Automated Galley Service (Automated Fleet / Flagship Command Staff)";
             }
         }
-        main.addPara(diningPartyText, 2f, Misc.getHighlightColor(), officer != null ? officer.getNameString() : "Fleet Crew");
+        main.addPara(diningPartyText, 2f, Misc.getHighlightColor(), officer != null ? (OS_PickRandomOfficer.getHumanOfficers().size() > 1 ? "Wardroom Command Staff" : officer.getNameString()) : "Fleet Crew");
 
         String purserText = "Fleet Purser: " + String.format("%,d", playerCredits) + " credits | Holds: " +
                 lobsterInCargo + "x Lobster, " + luxuryInCargo + "x Luxury Goods, " + foodInCargo + "x Food";
@@ -599,8 +635,16 @@ public class OS_CustomFoodDialogDelegate extends BaseCustomDialogDelegate {
             if (reaction != null && !reaction.isEmpty()) {
                 dialog.getTextPanel().addParagraph(reaction, Misc.getTextColor());
             }
-            int delta = OS_OfficerFriendship.getMealCamaraderieDelta(officer, opt.buffKey);
-            OS_OfficerFriendship.addFriendship(officer, delta, dialog);
+            List<PersonAPI> allOfficers = OS_PickRandomOfficer.getHumanOfficers();
+            if (allOfficers.isEmpty()) {
+                int delta = OS_OfficerFriendship.getMealCamaraderieDelta(officer, opt.buffKey);
+                OS_OfficerFriendship.addFriendship(officer, delta, dialog);
+            } else {
+                for (PersonAPI p : allOfficers) {
+                    int delta = OS_OfficerFriendship.getMealCamaraderieDelta(p, opt.buffKey);
+                    OS_OfficerFriendship.addFriendship(p, delta, dialog);
+                }
+            }
         }
 
         // Award Dining Experience (Officer XP + Fleet Bonus XP or Crew Bonus XP)

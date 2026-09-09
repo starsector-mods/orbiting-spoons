@@ -78,28 +78,68 @@ public class OS_OfficerMentoring extends BaseCommandPlugin {
     public static void awardDiningExperience(InteractionDialogAPI dialog, PersonAPI officer) {
         if (Global.getSector() == null) return;
 
-        if (officer != null && officer.getStats() != null) {
-            long officerXP = calculateOfficerXP(officer);
-            int levelBefore = officer.getStats().getLevel();
-            officer.getStats().addXP(officerXP);
-            int levelAfter = officer.getStats().getLevel();
+        if (officer != null) {
+            List<PersonAPI> humanOfficers = OS_PickRandomOfficer.getHumanOfficers();
+            List<PersonAPI> targets = !humanOfficers.isEmpty() ? humanOfficers : new ArrayList<PersonAPI>();
+            if (targets.isEmpty()) {
+                targets.add(officer);
+            }
 
             if (dialog != null && dialog.getTextPanel() != null) {
                 dialog.getTextPanel().setFontSmallInsignia();
-                dialog.getTextPanel().addParagraph(
-                    officer.getNameString() + " gained " + Misc.getWithDGS(officerXP) + " Officer Experience from wardroom tactical debriefing.",
-                    Misc.getPositiveHighlightColor()
-                );
-                dialog.getTextPanel().highlightInLastPara(Misc.getHighlightColor(), officer.getNameString(), Misc.getWithDGS(officerXP));
+                if (targets.size() == 1) {
+                    PersonAPI target = targets.get(0);
+                    if (target.getStats() != null) {
+                        long officerXP = calculateOfficerXP(target);
+                        int levelBefore = target.getStats().getLevel();
+                        target.getStats().addXP(officerXP);
+                        int levelAfter = target.getStats().getLevel();
 
-                if (levelAfter > levelBefore) {
+                        dialog.getTextPanel().addParagraph(
+                            target.getNameString() + " gained " + Misc.getWithDGS(officerXP) + " Officer Experience from wardroom tactical debriefing.",
+                            Misc.getPositiveHighlightColor()
+                        );
+                        dialog.getTextPanel().highlightInLastPara(Misc.getHighlightColor(), target.getNameString(), Misc.getWithDGS(officerXP));
+
+                        if (levelAfter > levelBefore) {
+                            dialog.getTextPanel().addParagraph(
+                                target.getNameString() + " has reached Level " + levelAfter + "! Allocate their new skill point in your fleet screen.",
+                                Misc.getPositiveHighlightColor()
+                            );
+                            dialog.getTextPanel().highlightInLastPara(Misc.getHighlightColor(), "Level " + levelAfter);
+                        }
+                    }
+                } else {
                     dialog.getTextPanel().addParagraph(
-                        officer.getNameString() + " has reached Level " + levelAfter + "! Allocate their new skill point in your fleet screen.",
-                        Misc.getPositiveHighlightColor()
+                        "The wardroom command staff (" + targets.size() + " officers) shares combat telemetry and tactical insights over the meal:",
+                        Misc.getTextColor()
                     );
-                    dialog.getTextPanel().highlightInLastPara(Misc.getHighlightColor(), "Level " + levelAfter);
+                    dialog.getTextPanel().highlightInLastPara(Misc.getHighlightColor(), targets.size() + " officers");
+
+                    for (PersonAPI target : targets) {
+                        if (target.getStats() == null) continue;
+                        long officerXP = calculateOfficerXP(target);
+                        int levelBefore = target.getStats().getLevel();
+                        target.getStats().addXP(officerXP);
+                        int levelAfter = target.getStats().getLevel();
+
+                        dialog.getTextPanel().addParagraph(
+                            "- " + target.getNameString() + " gained " + Misc.getWithDGS(officerXP) + " XP" + (levelAfter > levelBefore ? " (REACHED LEVEL " + levelAfter + "!)" : "."),
+                            Misc.getPositiveHighlightColor()
+                        );
+                        dialog.getTextPanel().highlightInLastPara(Misc.getHighlightColor(), target.getNameString(), Misc.getWithDGS(officerXP));
+                        if (levelAfter > levelBefore) {
+                            dialog.getTextPanel().highlightInLastPara(Misc.getHighlightColor(), "LEVEL " + levelAfter);
+                        }
+                    }
                 }
                 dialog.getTextPanel().setFontInsignia();
+            } else {
+                for (PersonAPI target : targets) {
+                    if (target.getStats() != null) {
+                        target.getStats().addXP(calculateOfficerXP(target));
+                    }
+                }
             }
 
             // Award player fleet Bonus XP

@@ -172,7 +172,12 @@ public class OS_PickRandomOfficer extends BaseCommandPlugin {
             String mealLabel = "Order from 'The Orbiting Spoon' for the table...";
             options.addOption(mealLabel, "orbiting_spoon_open_food_menu");
 
-            String menuTooltip = "Order a hot meal spread from 'The Orbiting Spoon' fabricator, including the Wardroom Cut (" + meal.name + " at " + priceFormatted + " credits), cargo hold banquets, and officer palate preferences for you and " + officer.getNameString() + ".";
+            String menuTooltip;
+            if (humanOfficerCount > 1) {
+                menuTooltip = "Order a hot meal spread from 'The Orbiting Spoon' fabricator for the entire wardroom (" + humanOfficerCount + " officers seated: " + meal.name + " at " + priceFormatted + " credits), cargo hold banquets, and officer palate preferences.";
+            } else {
+                menuTooltip = "Order a hot meal spread from 'The Orbiting Spoon' fabricator, including the Wardroom Cut (" + meal.name + " at " + priceFormatted + " credits), cargo hold banquets, and officer palate preferences for you and " + officer.getNameString() + ".";
+            }
             if (isDigesting) {
                 menuTooltip += "\n\n(Note: Your crew is currently digesting leftover " + activeMeal + " [" + String.format("%.1f", digestionDays) + " days remaining].)";
             }
@@ -206,8 +211,8 @@ public class OS_PickRandomOfficer extends BaseCommandPlugin {
 
             // 5. Switch officer (if humanOfficerCount > 1)
             if (humanOfficerCount > 1) {
-                options.addOption("Invite another officer to the table...", "orbiting_spoon_switch_officer_menu");
-                options.setTooltip("orbiting_spoon_switch_officer_menu", "Invite a different officer to take the seat across the table.");
+                options.addOption("Turn to speak with another officer at the table...", "orbiting_spoon_switch_officer_menu");
+                options.setTooltip("orbiting_spoon_switch_officer_menu", "Turn your attention across the table to converse with a different officer in your wardroom.");
             }
 
             // 6. Step out to crew mess
@@ -253,10 +258,10 @@ public class OS_PickRandomOfficer extends BaseCommandPlugin {
                 options.setTooltip("orbiting_spoon_chat_crew_meal", "Ask the crew for their honest thoughts on the current meal spread.");
             }
 
-            // 6. Invite officer (if humanOfficerCount > 0)
+            // 6. Return to wardroom table (if humanOfficerCount > 0)
             if (humanOfficerCount > 0) {
-                options.addOption("Invite an officer to join you at the table...", "orbiting_spoon_switch_officer_menu");
-                options.setTooltip("orbiting_spoon_switch_officer_menu", "Invite one of your bridge officers to leave their quarters and join you at the table.");
+                options.addOption("Return to the wardroom table with your officers...", "orbiting_spoon_switch_officer_menu");
+                options.setTooltip("orbiting_spoon_switch_officer_menu", "Head over to the wardroom table where your bridge officers are seated.");
             }
 
             // 7. Department Status Reports
@@ -283,7 +288,7 @@ public class OS_PickRandomOfficer extends BaseCommandPlugin {
             OptionPanelAPI options = dialog.getOptionPanel();
             options.clearOptions();
             dialog.getTextPanel().setFontSmallInsignia();
-            dialog.getTextPanel().addParagraph("Select an officer to invite to the mess table:", Misc.getHighlightColor());
+            dialog.getTextPanel().addParagraph("The entire wardroom is seated around the table. Turn your attention to an officer:", Misc.getHighlightColor());
             dialog.getTextPanel().setFontInsignia();
 
             for (int i = 0; i < humanOfficers.size() && i < 16; i++) {
@@ -292,7 +297,7 @@ public class OS_PickRandomOfficer extends BaseCommandPlugin {
                 String tier = OS_OfficerFriendship.getTierName(fs);
                 int lvl = p.getStats().getLevel();
                 String optId = "os_opt_switch_" + i;
-                options.addOption("Invite " + p.getNameString() + " (Lvl " + lvl + ", " + tier + ")", optId);
+                options.addOption("Speak with " + p.getNameString() + " (Lvl " + lvl + ", " + tier + ")", optId);
                 options.setTooltip(
                     optId,
                     "Personality: " + (p.getPersonalityAPI() != null ? p.getPersonalityAPI().getDisplayName() : "Steady") +
@@ -301,8 +306,8 @@ public class OS_PickRandomOfficer extends BaseCommandPlugin {
                 );
             }
 
-            options.addOption("Dine with the deck crew instead", "os_opt_switch_crew");
-            options.setTooltip("os_opt_switch_crew", "Invite off-duty deckhands, mechanics, and spacers to share the table.");
+            options.addOption("Step away to dine with the deck crew instead", "os_opt_switch_crew");
+            options.setTooltip("os_opt_switch_crew", "Leave the wardroom table to share a meal with off-duty deckhands, mechanics, and spacers in the general mess hall.");
 
             options.addOption("Return to the table", "orbiting_spoon_start_dispatch");
             return true;
@@ -314,11 +319,21 @@ public class OS_PickRandomOfficer extends BaseCommandPlugin {
             if (targetIndexStr != null && sectorMem != null) {
                 if ("crew".equals(targetIndexStr) || "-1".equals(targetIndexStr)) {
                     sectorMem.set(KEY_ACTIVE_OFFICER_ID, "crew");
+                    dialog.getTextPanel().addParagraph(
+                        "You step away from the wardroom table to pull up a stool in the general mess hall with the deck crew.",
+                        Misc.getTextColor()
+                    );
                 } else {
                     try {
                         int idx = Integer.parseInt(targetIndexStr);
                         if (idx >= 0 && idx < humanOfficers.size()) {
-                            sectorMem.set(KEY_ACTIVE_OFFICER_ID, humanOfficers.get(idx).getId());
+                            PersonAPI switched = humanOfficers.get(idx);
+                            sectorMem.set(KEY_ACTIVE_OFFICER_ID, switched.getId());
+                            dialog.getTextPanel().addParagraph(
+                                "You turn your attention across the table to " + switched.getNameString() + ".",
+                                Misc.getTextColor()
+                            );
+                            dialog.getTextPanel().highlightInLastPara(Misc.getHighlightColor(), switched.getNameString());
                         }
                     } catch (Exception ignored) {}
                 }
@@ -461,6 +476,16 @@ public class OS_PickRandomOfficer extends BaseCommandPlugin {
             sectorMem.unset("$os_officerPerson");
         }
         
+        // Narrative for entering the wardroom table if all officers are present
+        boolean isInitialEntrance = (params == null || params.isEmpty());
+        if (isInitialEntrance && hasOfficer && chosenPerson != null && humanOfficers.size() > 1) {
+            dialog.getTextPanel().addParagraph(
+                "Your fleet's command staff takes seats around a broad mess table. The entire wardroom sits together, with " + chosenPerson.getNameString() + " sitting directly across from you.",
+                Misc.getTextColor()
+            );
+            dialog.getTextPanel().highlightInLastPara(Misc.getHighlightColor(), chosenPerson.getNameString());
+        }
+
         // Populate telemetry memory variables silently without printing
         OS_FetchFleetStatus.populateTelemetryMemory(memoryMap);
         
