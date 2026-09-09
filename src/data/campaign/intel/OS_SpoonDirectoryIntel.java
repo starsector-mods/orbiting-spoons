@@ -210,6 +210,24 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
     }
 
     @Override
+    protected void bullet(TooltipMakerAPI info) {
+        info.setBulletedListMode(INDENT);
+        info.setTextWidthOverride(0f);
+    }
+
+    @Override
+    protected void indent(TooltipMakerAPI info) {
+        info.setBulletedListMode(INDENT);
+        info.setTextWidthOverride(0f);
+    }
+
+    @Override
+    protected void unindent(TooltipMakerAPI info) {
+        info.setBulletedListMode(null);
+        info.setTextWidthOverride(0f);
+    }
+
+    @Override
     public boolean doesButtonHaveConfirmDialog(Object buttonId) {
         if (TAB_REGISTRY.equals(buttonId) || TAB_REVIEWS.equals(buttonId) || TAB_REGULATIONS.equals(buttonId) || TAB_MORALE.equals(buttonId)) {
             return false;
@@ -552,6 +570,8 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
      * - Section C: Commissary Regulations & Port Facilities
      */
     protected void renderMoraleAndFieldGuideTab(TooltipMakerAPI info, float width, float opad, float spad) {
+        info.setTextWidthOverride(0f);
+        info.setBulletedListMode(null);
         info.addSectionHeading("Fleet Morale & Naval Field Guide", Alignment.MID, opad);
 
         // Section A: Current Fleet Morale & Shore Leave Status
@@ -607,9 +627,9 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
             info.addSpacer(4f);
             info.addPara("Advice on Finding the Nearest Space Diner:", Misc.getHighlightColor(), spad);
             bullet(info);
-            addBullet(info, "Switch to Tab 1 (Sector Registry Table) to view all operational Domain fabricators sorted by real-time hyperspace proximity.", spad, Misc.getTextColor(), "Tab 1 (Sector Registry Table)");
-            addBullet(info, "Centering this guide on the Star Map immediately tracks and highlights the nearest operational station.", spad, Misc.getTextColor(), "Star Map");
-            addBullet(info, "Dock at any Market Size 4+ colony of a recognized Core faction and open the Bar to visit 'The Orbiting Spoon'.", spad, Misc.getTextColor(), "Market Size 4+", "Bar");
+            addBullet(info, "Switch to Tab 1 (Sector Registry Table) to view all operational Domain fabricators sorted by real-time hyperspace proximity.", spad, Misc.getHighlightColor(), "Tab 1 (Sector Registry Table)");
+            addBullet(info, "Centering this guide on the Star Map immediately tracks and highlights the nearest operational station.", spad, Misc.getHighlightColor(), "Star Map");
+            addBullet(info, "Dock at any Market Size 4+ colony of a recognized Core faction and open the Bar to visit 'The Orbiting Spoon'.", spad, Misc.getHighlightColor(), "Market Size 4+", "Bar");
             addBullet(info, "Ordering a hot meal spread grants 14 to 21 days of Shore Leave (-5% Upkeep, +5% Max CR, +10% CR Recovery) and opens wardroom mentoring.", spad, Misc.getPositiveHighlightColor(), "14 to 21 days of Shore Leave", "-5% Upkeep, +5% Max CR, +10% CR Recovery");
             unindent(info);
         }
@@ -690,14 +710,14 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
         info.addPara(
             "To ensure all spacers and commanders can afford hot food regardless of fleet tonnage, diner meals are covered by port authority commissary subsidies. Prices are flat and standardized between 50 and 600 credits (averaging 200 credits), without punishing per-crew scaling multipliers:", Misc.getTextColor(), spad);
         bullet(info);
-        addBullet(info, "Luddic Path: Ascetic Penance Rations (50 credits)", spad, Misc.getTextColor(), "50 credits");
-        addBullet(info, "Pirates: Fringe Scavenger Platter (100 credits)", spad, Misc.getTextColor(), "100 credits");
-        addBullet(info, "Hegemony: Commissary Auxiliary Rations (150 credits)", spad, Misc.getTextColor(), "150 credits");
-        addBullet(info, "Luddic Church: Pilgrim's Hearth Harvest Feast (200 credits)", spad, Misc.getTextColor(), "200 credits");
-        addBullet(info, "Independents / Player: Loaded Spacer's Full-Burn Set (200 credits)", spad, Misc.getTextColor(), "200 credits");
-        addBullet(info, "Persean League: Archon's Grand Mezze Banquet (350 credits)", spad, Misc.getTextColor(), "350 credits");
-        addBullet(info, "Tri-Tachyon: Executive Synth-Steak Suite (450 credits)", spad, Misc.getTextColor(), "450 credits");
-        addBullet(info, "Sindrian Diktat: Supreme Executor's Volturnian Feast (600 credits)", spad, Misc.getTextColor(), "600 credits");
+        addBullet(info, "Luddic Path: Ascetic Penance Rations (50 credits)", spad, Misc.getHighlightColor(), "50 credits");
+        addBullet(info, "Pirates: Fringe Scavenger Platter (100 credits)", spad, Misc.getHighlightColor(), "100 credits");
+        addBullet(info, "Hegemony: Commissary Auxiliary Rations (150 credits)", spad, Misc.getHighlightColor(), "150 credits");
+        addBullet(info, "Luddic Church: Pilgrim's Hearth Harvest Feast (200 credits)", spad, Misc.getHighlightColor(), "200 credits");
+        addBullet(info, "Independents / Player: Loaded Spacer's Full-Burn Set (200 credits)", spad, Misc.getHighlightColor(), "200 credits");
+        addBullet(info, "Persean League: Archon's Grand Mezze Banquet (350 credits)", spad, Misc.getHighlightColor(), "350 credits");
+        addBullet(info, "Tri-Tachyon: Executive Synth-Steak Suite (450 credits)", spad, Misc.getHighlightColor(), "450 credits");
+        addBullet(info, "Sindrian Diktat: Supreme Executor's Volturnian Feast (600 credits)", spad, Misc.getHighlightColor(), "600 credits");
         unindent(info);
         info.addSpacer(4f);
 
@@ -708,6 +728,8 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
         addBullet(info, "Communal Famine Relief Stew (10 units Food): During port food shortages, donating bulk grain brews hot gratitude stew for starving dockers (+5 Faction Rep, 14 days Shore Leave).", spad, Misc.getPositiveHighlightColor(), "10 units Food", "+5 Faction Rep", "14 days Shore Leave");
         unindent(info);
         info.addSpacer(10f);
+        info.setTextWidthOverride(0f);
+        info.setBulletedListMode(null);
     }
 
     @Deprecated
@@ -846,6 +868,7 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
     }
 
     private void addBullet(TooltipMakerAPI info, String text, float pad, Color highlightColor, String... highlights) {
+        info.setTextWidthOverride(0f);
         LabelAPI label = info.addPara(text, pad);
         if (highlights != null && highlights.length > 0) {
             label.setHighlight(highlights);
