@@ -100,12 +100,12 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
 
     @Override
     public String getName() {
-        return "The Orbiting Spoon: Spacer's Registry & Field Guide";
+        return "The Orbiting Spoon";
     }
 
     @Override
     public String getSmallDescriptionTitle() {
-        return "The Orbiting Spoon: Spacer's Registry & Field Guide";
+        return "The Orbiting Spoon";
     }
 
     @Override
@@ -331,6 +331,7 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
 
     @Override
     public void createSmallDescription(TooltipMakerAPI info, float width, float height) {
+        info.addSpacer(24f); // Clear top-right "Show on map" button
         createDescriptionContent(info, width - 12f, height, false);
     }
 
@@ -371,7 +372,7 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
         float gap = 4f;
         float btnWidth = (contentWidth - gap * 2f) / 3f;
 
-        info.addSectionHeading("Directory Navigation (Select Tab)", Alignment.MID, opad);
+        info.addSectionHeading("Directory Navigation", Alignment.MID, opad);
 
         TooltipMakerAPI t1 = info.beginSubTooltip(btnWidth);
         t1.setButtonFontVictor14();
@@ -387,7 +388,7 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
         TooltipMakerAPI t2 = info.beginSubTooltip(btnWidth);
         t2.setButtonFontVictor14();
         t2.addButton(
-            (activeTab == DirectoryTab.REVIEWS ? "> " : "") + "2. Sectors Unknown",
+            (activeTab == DirectoryTab.REVIEWS ? "> " : "") + "2. Reviews",
             TAB_REVIEWS,
             activeTab == DirectoryTab.REVIEWS ? bright : base,
             activeTab == DirectoryTab.REVIEWS ? dark : bg,
@@ -398,7 +399,7 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
         TooltipMakerAPI t3 = info.beginSubTooltip(btnWidth);
         t3.setButtonFontVictor14();
         t3.addButton(
-            (activeTab == DirectoryTab.REGULATIONS ? "> " : "") + "3. Fleet Morale",
+            (activeTab == DirectoryTab.REGULATIONS ? "> " : "") + "3. Morale",
             TAB_REGULATIONS,
             activeTab == DirectoryTab.REGULATIONS ? bright : base,
             activeTab == DirectoryTab.REGULATIONS ? dark : bg,
@@ -435,7 +436,7 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
      * TAB 1: Sector Registry Table (Read from left to right)
      */
     protected void renderRegistryTab(TooltipMakerAPI info, float width, float opad, float spad) {
-        info.addSectionHeading("Operational Fabricators (Sorted by Proximity)", Alignment.MID, opad);
+        info.addSectionHeading("Operational Fabricators", Alignment.MID, opad);
         info.addPara("Review operational facilities below. Centering this log on the Star Map immediately pans to and tracks the nearest operational diner.", Misc.getGrayColor(), spad);
 
         SectorEntityToken player = Global.getSector().getPlayerFleet();
@@ -485,9 +486,9 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
             "Colony", colColony,
             "System", colSystem,
             "Faction", colFaction,
-            "Regional Specialty", colDish,
+            "Specialty", colDish,
             "Price", colPrice,
-            "Distance", colDist
+            "Dist", colDist
         );
 
         boolean isFirst = true;
@@ -540,13 +541,8 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
      * Field notes by Anton 'Bones' Burndain (Chief Mess Attendant, Hegemony Auxiliaries, Dishonorably Discharged)
      * Book: "Sectors Unknown: Galley Confidential across the Persean Void"
      */
-        /**
-     * TAB 2: Galley Confidential across the Persean Sector
-     * Field notes by Anton 'Bones' Burndain (Chief Mess Attendant, Hegemony Auxiliaries, Dishonorably Discharged)
-     * Book: "Sectors Unknown: Galley Confidential across the Persean Void"
-     */
     protected void renderReviewsTab(TooltipMakerAPI info, float width, float opad, float spad) {
-        info.addSectionHeading("Sectors Unknown: Galley Confidential across the Persean Void", Alignment.MID, opad);
+        info.addSectionHeading("Field Notes: Galley Confidential", Alignment.MID, opad);
 
         info.addPara(
             "\"The Persean Sector is a beautiful, filthy, irradiated mess, crawling with frauds, warlords, and self-appointed 'culinary commentators' who haven't stepped outside a Core World orbital lounge in twenty cycles. Chief among these hacks is my insufferable former mess-mate, Gordon 'Transverse' Stumps. Back in Cycle 204 at Eos Exodus, I had my hand on the manual airlock override, fully prepared to vent Stumps into the cold, uncaring void mid-soliloquy over 'sous-vide squab.' I only aborted because the chief engineer swore that venting Stumps's enormous ego would permanently clog the atmospheric intake scrubbers. This dispatch isn't for Stumps and his silk-robed sycophants. This is for the captains, the exhaust-huffing engineers, and the grease-monkeys living in pressurized iron buckets hurtling through a cosmic graveyard. Eat dirty, drink deep, tip your mess attendants, and never, ever order the refrigerated seafood when the station's reactor tap is flashing amber.\"",
@@ -560,7 +556,8 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
 
         // 1. Sindrian Diktat
         addReviewCard(info, opad, spad,
-            "[No Transponders: Cruorian Reeds] Sindrian Diktat: Volturnian Lobster Feast (200 credits)",
+            "Sindrian Diktat: Volturnian Lobster Feast",
+            "Cruorian Reeds (No Transponders)",
             getFactionColorSafe("sindrian_diktat"),
             "Sweet, tender blue-shell lobster poached in fiery clarified pepper butter. Every bite is seasoned with the sweat of Askonia's dockworkers and the paranoia of an authoritarian petrol-state. Pure decadence.",
             "Sweet, tender blue-shell lobster poached in volcanic clarified pepper butter, served with an Askonia root mash that tastes like it was fertilized with antimatter fuel runoff. Every bite is seasoned with the sweat of overworked dockhands, the relentless hum of atmospheric fuel refineries, and the suffocating paranoia of an authoritarian petrol-state where muttering 'this tail is slightly rubbery' gets you reassigned to a heavy-water mining detail.\n\nThe self-appointed gastronomes at the Askonia Ministry of Cultural Rectitude—led by none other than Gordon 'Transverse' Stumps on a paid junket—awarded this dish 'Six Golden Lion Laurels for Ideological Purity.' What a staggering load of synthetic tripe. I once tried to sabotage Stumps's tasting session by replacing his dipping butter with Grade-B maneuvering thruster lubricant. The idiot didn't even notice; he smacked his lips on holo-feed and praised its 'daring, petroleum-forward finish.' You cannot defeat a man whose palate has been replaced with asbestos.\n\nIs it decadent? Absolutely. Is it bathed in blood and heavy fuel oil? Unquestionably. Eat like an absolute tyrant while you can, because when the fuel tanks inevitably blow, nobody is going to remember the parsley garnish.",
@@ -570,7 +567,8 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
 
         // 2. Luddic Church
         addReviewCard(info, opad, spad,
-            "[Sectors Unknown: Gilead's Breadbasket] Luddic Church: Pilgrim's Hearth Harvest Feast (200 credits)",
+            "Luddic Church: Pilgrim's Hearth Harvest Feast",
+            "Gilead's Breadbasket (Sectors Unknown)",
             getFactionColorSafe("luddic_church"),
             "Real stone-ground barley bread and hand-churned butter from Gilead. No chemical synthesizers or corporate nonsense. Taking a bite of warm crumb that grew in honest soil feels holy.",
             "Real stone-ground barley bread, salted hand-churned butter from Gilead's river valleys, and a thick earthenware pot of root vegetable stew simmered over crackling charcoal. No chemical synthesizers, no corporate branding, no bio-engineered enzyme stabilizers. Taking a bite of dense, steaming crumb that grew out of honest, sun-drenched planetary dirt feels less like eating lunch and more like receiving a personal apology from the Creator for the invention of hyperspace.\n\nMeanwhile, Gordon Stumps and his pampered gaggle of League food columnists dismiss this as 'primitive agrarian peasant gruel lacking modern aromatic complexity.' Those delicate Core World dilettantes can go choke on their nitrogen-foamed emulsion gels. When your entire career is spent breathing recycled flatulence and scorched capacitor ozone in a steel corridor, real soil-grown food will bring tears to a hardened gunner's eyes. Stumps wouldn't recognize true spiritual beauty unless it came wrapped in a five-thousand-credit corporate sponsorship ribbon.\n\nChew slowly, keep your cynical mouth shut, and leave a generous tithe for the deacon who baked it.",
@@ -580,7 +578,8 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
 
         // 3. Persean League
         addReviewCard(info, opad, spad,
-            "[A Cook's Burn: Kazeron's Terraces] Persean League: Archon's Grand Mezze Banquet (200 credits)",
+            "Persean League: Archon's Grand Mezze Banquet",
+            "Kazeron's Terraces (A Cook's Burn)",
             getFactionColorSafe("persean"),
             "Rosemary-rubbed waterfowl skewers and chilled citrus liqueur. Meticulously refined to stroke merchant egos, but the citrus cuts through engine grease like nothing else in the Core.",
             "Rosemary-rubbed waterfowl skewers, chilled mountain citrus liqueur, and wood-fired flatbread blistered to crisp perfection. It is meticulously, relentlessly refined—obviously engineered from top to bottom to stroke the fragile egos of bloated merchant princes, oligarchs, and hereditary Archons who think owning three orbital gantries makes them Domain royalty.\n\nStumps was awarded an honorary silver banquet medal on Kazeron after penning a three-thousand-word master's thesis on the 'metaphorical cadence of the wild oregano.' I was so disgusted that during our EVA transfer across the orbital spire, I used a sharpened oyster shucker to poke a micro-puncture into Stumps's environmental suit. I prayed the slow hiss of venting oxygen would finally humble him. To my eternal fury, the man's neck was so insulated with layers of catered foie gras and self-regard that the suit's emergency gel sealed the breach instantly. He thought it was 'a refreshing mountain draft.'\n\nSip the vintage, laugh politely at their atrocious jokes, and always double-check the docking tariff invoice before you pay.",
@@ -590,7 +589,8 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
 
         // 4. Independents
         addReviewCard(info, opad, spad,
-            "[Galley Confidential: The 24-Hour Airlock] Independents: Loaded Spacer's Full-Burn Set (200 credits)",
+            "Independents: Loaded Spacer's Full-Burn Set",
+            "The 24-Hour Airlock (Galley Confidential)",
             getFactionColorSafe("independent"),
             "The eternal backbone of the void. Thick root-vegetable beef stew, a stack of hot waffles slathered in butter, and scalded coffee. Honest, greasy, and carries you through three hyperspace burns.",
             "The eternal, grease-slicked backbone of the entire Persean Sector. A steaming bowl of root-vegetable beef stew that clings to your ribs, a stack of golden waffles drowned in artificial maple syrup, and a chipped mug of black coffee hot and acidic enough to etch hull armor. It is honest, it is violently unpretentious, and it packs enough pure caloric horsepower to drag an exhausted watchstander through three back-to-back storm jumps without blinking.\n\nStumps once published a syndicated column calling Independent diners 'unhygienic bio-hazard troughs for the uncultured.' I spent three weeks planning to swap his cabin's emergency oxygen bottle with pressurized wastewater vapor, but my quartermaster talked me down because wasting wastewater is a court-martial offense. Stumps wouldn't last four minutes in a leaky frigate engine room during a coolant rupture, let alone appreciate the structural integrity of real diner grease.\n\nIf the vinyl booth doesn't have at least two patched knife slashes and the stool doesn't wobble, walk right back out—you're in a tourist trap.",
@@ -600,7 +600,8 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
 
         // 5. Tri-Tachyon
         addReviewCard(info, opad, spad,
-            "[Sectors Unknown: Port Tse Corporate Lounge] Tri-Tachyon: Executive Synth-Steak Suite (200 credits)",
+            "Tri-Tachyon: Executive Synth-Steak Suite",
+            "Port Tse Corporate Lounge (Sectors Unknown)",
             getFactionColorSafe("tritachyon"),
             "A terrifying miracle of bio-molecular synthesis. Laser-seared and mathematically perfect, it tastes like quarterly profit margins and is paired with nootropics. Clean, expensive, and devoid of humanity.",
             "A terrifying, clinical triumph of bio-molecular synthesizer science. Laser-seared to a mathematically flawless medium-rare, perfectly marbling synthetic lipids with lab-grown myofibrils. It tastes of quarterly earnings calls, boardroom sterility, non-disclosure agreements, and the faint electric tingle of cognitive-enhancing nootropic side-dishes designed to keep middle managers awake for forty-eight-hour fiscal audits.\n\nGordon Stumps was paid fifty thousand credits by Tri-Tachyon PR to host the keynote product launch for this steak. Out of sheer malice, I hacked the demo unit's matter compiler to print Stumps a slice of vulcanized EVA boot leather infused with MSG and grill marks. The bastard chewed through it on live tri-cast without missing a beat, declaring it had 'a bold, muscular, uncompromising mouthfeel' and giving it a standing ovation. The man is immune to shame, poison, and basic culinary dignity.\n\nEat it if your corporation is footing the expense account, enjoy the eerie hyper-focus from the stimulants, and for the love of the Domain, never ask which bio-reactor vat the protein culture was harvested from.",
@@ -610,7 +611,8 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
 
         // 6. Hegemony
         addReviewCard(info, opad, spad,
-            "[The Nasty Chits: Chicomoztoc Gantry Mess] Hegemony: Commissary Auxiliary Rations (200 credits)",
+            "Hegemony: Commissary Auxiliary Rations",
+            "Chicomoztoc Gantry Mess (The Nasty Chits)",
             getFactionColorSafe("hegemony"),
             "Dense hardtack that could plug a hull breach, and boiling iron-soy sludge. No garlic, no pepper, no joy. Tastes like grey primer and obedience. Eat before your twelve-hour shift.",
             "Dense composite hardtack with the tensile strength to patch a micrometeorite hull breach, accompanied by a steaming bowl of grey iron-soy slurry. Zero garlic, zero pepper, zero joy. It tastes of industrial primer paint, emergency bulkhead sealant, martial law, and unthinking obedience to the naval chain of command. You eat it standing up at a stainless steel trough in under six minutes before your next twelve-hour gantry shift begins.\n\nWhen we were both ensigns in the Auxiliary Mess Corps, Stumps gave a brown-nosing speech to the Fleet Logistics Board claiming this grey paste 'instills moral fiber and patriotic stoicism.' I loosened the quick-release pin on his mess-bench, aiming to dump three liters of boiling soy mash directly into his lap. Naturally, a passing patrol commander bumped the table first, caught the tray, and praised Stumps for 'alert readiness under mess-hall turbulence.' I got assigned two weeks of latrine duty. Stumps got promoted.\n\nDon't complain to the mess attendant. The cook is usually a retired chief master-at-arms whose best friend runs the station brig.",
@@ -620,7 +622,8 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
 
         // 7. Pirates
         addReviewCard(info, opad, spad,
-            "[No Transponders: Donkers Salvage Yards] Pirates: Fringe Scavenger Platter (200 credits)",
+            "Pirates: Fringe Scavenger Platter",
+            "Donkers Salvage Yards (No Transponders)",
             getFactionColorSafe("pirates"),
             "Mystery ribs charred over open engine manifolds, drowned in peppery fungal sludge to cover the rot. You will experience either animal euphoria or catastrophic gastrointestinal failure. Roll the dice.",
             "Unidentified ribs charred black over the open exhaust manifold of a jury-rigged destroyer engine, drenched in blistering, peppery fungal mash specifically engineered to mask whatever creeping biological decay is occurring beneath the crust. Downed with a tin cup of moonshine distilled from de-icing fluid and fermented hydroponic waste. You will experience either a surge of raw, feral adrenaline or violent, catastrophic gastrointestinal rebellion within the hour. It is a fifty-fifty coin flip—much like trusting a pirate commodore with your transponder codes.\n\nI once deliberately fed Stumps false coordinates to Donkers Salvage, telling him it was an 'exclusive underground artisanal pop-up.' I genuinely hoped the scrapper cook would throw him into the rendering vats. Instead, the pirates stole his boots, emptied his cred-stick, forced him to wash dishes for a week, and sent him back on a freighter. The insufferable fraud returned to Chicomoztoc and wrote an award-winning article about 'immersive, authentic fringe street theater.' You cannot kill this man.\n\nKeep your sidearm holster unbuttoned, never ask what species the meat used to belong to, and never look directly into the brew kettle.",
@@ -630,7 +633,8 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
 
         // 8. Luddic Path
         addReviewCard(info, opad, spad,
-            "[Sectors Unknown: Cell Bunker Galley] Luddic Path: Ascetic Penance Broth (200 credits)",
+            "Luddic Path: Ascetic Penance Broth",
+            "Cell Bunker Galley (Sectors Unknown)",
             getFactionColorSafe("luddic_path"),
             "Tastes like crushed gravel simmered in reactor runoff. Cell fighters hammered off the seasoning injectors because pleasure is a sin. Buy only if facing active starvation.",
             "Tastes like crushed silicate gravel simmered in irradiated coolant runoff, paired with rock-hard unfermented root cakes that require a combat knife to fracture. The cell's kitchen zealots deliberately took a welding torch to the flavor injectors because experiencing physical enjoyment during mortal existence is classified as heresy against Ludd's divine balance. It is bleak, abrasive, and tastes distinctly of impending explosive martyrdom.\n\nGordon Stumps wouldn't come within three star-systems of a Pather mess hall, and for once, his cowardice serves him well. Walking into an active cell bunker with a notepad and asking for the chef's tasting menu is an express ticket to being welded inside a torpedo tube. I am the only idiot in the Sector who ate this twice—once out of curiosity, and once because I was hiding from Stumps's lawyers after the boot-leather incident on Port Tse.\n\nConsume only if you are experiencing Stage 4 active starvation, or if you feel an urgent psychological need to punish yourself for your worldly sins. And whatever you do, do not ask the server for table salt—it will trigger an immediate theological tribunal.",
@@ -641,8 +645,13 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
         info.addSpacer(10f);
     }
 
-    protected void addReviewCard(TooltipMakerAPI info, float opad, float spad, String heading, Color factionColor, String shortReview, String fullReview, String rating, String proTip) {
+    protected void addReviewCard(TooltipMakerAPI info, float opad, float spad, String heading, String chapter, Color factionColor, String shortReview, String fullReview, String rating, String proTip) {
         info.addSectionHeading(heading, Alignment.LMID, opad);
+        if (chapter != null && !chapter.isEmpty()) {
+            LabelAPI cLabel = info.addPara("Field Dispatch: " + chapter, Misc.getGrayColor(), spad);
+            cLabel.setHighlight(chapter);
+            cLabel.setHighlightColors(factionColor != null ? factionColor : Misc.getHighlightColor());
+        }
         info.addPara(shortReview, Misc.getTextColor(), spad);
         
         TooltipMakerAPI btnInfo = info.beginSubTooltip(140f);
@@ -668,10 +677,10 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
     protected void renderMoraleAndFieldGuideTab(TooltipMakerAPI info, float width, float opad, float spad) {
         info.setTextWidthOverride(0f);
         info.setBulletedListMode(null);
-        info.addSectionHeading("Fleet Morale & Naval Field Guide", Alignment.MID, opad);
+        info.addSectionHeading("Fleet Morale & Field Guide", Alignment.MID, opad);
 
         // Section A: Current Fleet Morale & Shore Leave Status
-        info.addSectionHeading("Section A: Current Fleet Morale & Shore Leave Status", Alignment.LMID, opad);
+        info.addSectionHeading("Section A: Fleet Morale & Shore Leave Status", Alignment.LMID, opad);
 
         boolean isActive = OS_ShoreLeaveBuff.isBuffActive();
         if (isActive) {
@@ -732,7 +741,7 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
         info.addSpacer(8f);
 
         // Section B: Wardroom Experience & Tactical Mentoring
-        info.addSectionHeading("Section B: Wardroom Experience & Tactical Mentoring", Alignment.LMID, opad);
+        info.addSectionHeading("Section B: Wardroom Tactical Mentoring", Alignment.LMID, opad);
 
         info.addPara("Informal Officer Mentoring (Officer XP & Fleet Bonus XP):", Misc.getHighlightColor(), spad);
         info.addPara(
@@ -874,7 +883,7 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
 
     @Override
     public String getSortString() {
-        return "The Orbiting Spoon: Spacer's Registry & Field Guide";
+        return "The Orbiting Spoon";
     }
 
     @Override
