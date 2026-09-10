@@ -230,7 +230,7 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
 
     @Override
     public boolean doesButtonHaveConfirmDialog(Object buttonId) {
-        if (buttonId instanceof String[] && ((String[])buttonId)[0].equals("full_review")) return false;
+        if (buttonId instanceof String[] && ((String[])buttonId)[0].equals("full_review")) return true;
         if (TAB_REGISTRY.equals(buttonId) || TAB_REVIEWS.equals(buttonId) || TAB_REGULATIONS.equals(buttonId) || TAB_MORALE.equals(buttonId)) {
             return false;
         }
@@ -238,14 +238,76 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
     }
 
     @Override
-    public void buttonPressConfirmed(Object buttonId, IntelUIAPI ui) {
+    public float getConfirmationPromptWidth(Object buttonId) {
+        if (buttonId instanceof String[] && ((String[])buttonId)[0].equals("full_review")) {
+            return 650f;
+        }
+        return super.getConfirmationPromptWidth(buttonId);
+    }
+
+    @Override
+    public void createConfirmationPrompt(Object buttonId, TooltipMakerAPI prompt) {
         if (buttonId instanceof String[] && ((String[])buttonId)[0].equals("full_review")) {
             String[] arr = (String[]) buttonId;
             String heading = arr[1];
             String fullReview = arr[2];
             String rating = arr.length > 3 ? arr[3] : null;
             String proTip = arr.length > 4 ? arr[4] : null;
-            ui.showDialog(Global.getSector().getPlayerFleet(), new OS_FullReviewDialogPlugin(heading, fullReview, rating, proTip));
+
+            float opad = 10f;
+            float spad = 5f;
+
+            if (heading != null) {
+                prompt.addSectionHeading(heading, Alignment.LMID, 0f);
+            }
+
+            LabelAPI authLabel = prompt.addPara("Field Dispatch from Anton 'Bones' Burndain (Chief Mess Attendant, Ret.):", Misc.getGrayColor(), opad);
+            authLabel.setHighlight("Anton 'Bones' Burndain");
+            authLabel.setHighlightColors(Misc.getHighlightColor());
+
+            if (fullReview != null) {
+                String[] paragraphs = fullReview.split("\n\n");
+                for (String p : paragraphs) {
+                    if (!p.trim().isEmpty()) {
+                        prompt.addPara(p.trim(), spad);
+                    }
+                }
+            }
+
+            if (rating != null && !rating.isEmpty()) {
+                LabelAPI rLabel = prompt.addPara(rating, Misc.getHighlightColor(), opad);
+                rLabel.setHighlightColor(Misc.getBrightPlayerColor());
+            }
+
+            if (proTip != null && !proTip.isEmpty()) {
+                LabelAPI tipLabel = prompt.addPara(proTip, Misc.getGrayColor(), spad);
+                tipLabel.setHighlight("Bones's Field Rule:");
+                tipLabel.setHighlightColors(Misc.getHighlightColor());
+            }
+            return;
+        }
+        super.createConfirmationPrompt(buttonId, prompt);
+    }
+
+    @Override
+    public String getConfirmText(Object buttonId) {
+        if (buttonId instanceof String[] && ((String[])buttonId)[0].equals("full_review")) {
+            return "Close";
+        }
+        return super.getConfirmText(buttonId);
+    }
+
+    @Override
+    public String getCancelText(Object buttonId) {
+        if (buttonId instanceof String[] && ((String[])buttonId)[0].equals("full_review")) {
+            return null;
+        }
+        return super.getCancelText(buttonId);
+    }
+
+    @Override
+    public void buttonPressConfirmed(Object buttonId, IntelUIAPI ui) {
+        if (buttonId instanceof String[] && ((String[])buttonId)[0].equals("full_review")) {
             return;
         }
         if (TAB_REGISTRY.equals(buttonId)) {
@@ -292,8 +354,6 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
         float opad = 10f;
         float spad = 3f;
         float contentWidth = Math.max(260f, width - 12f);
-
-        info.setParaInsigniaLarge();
 
         // Intro narrative
         info.addPara(
@@ -375,7 +435,6 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
      * TAB 1: Sector Registry Table (Read from left to right)
      */
     protected void renderRegistryTab(TooltipMakerAPI info, float width, float opad, float spad) {
-        info.setParaInsigniaLarge();
         info.addSectionHeading("Operational Fabricators (Sorted by Proximity)", Alignment.MID, opad);
         info.addPara("Review operational facilities below. Centering this log on the Star Map immediately pans to and tracks the nearest operational diner.", Misc.getGrayColor(), spad);
 
@@ -487,7 +546,6 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
      * Book: "Sectors Unknown: Galley Confidential across the Persean Void"
      */
     protected void renderReviewsTab(TooltipMakerAPI info, float width, float opad, float spad) {
-        info.setParaInsigniaLarge();
         info.addSectionHeading("Sectors Unknown: Galley Confidential across the Persean Void", Alignment.MID, opad);
 
         info.addPara(
@@ -585,7 +643,6 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
 
     protected void addReviewCard(TooltipMakerAPI info, float opad, float spad, String heading, Color factionColor, String shortReview, String fullReview, String rating, String proTip) {
         info.addSectionHeading(heading, Alignment.LMID, opad);
-        info.setParaInsigniaLarge();
         info.addPara(shortReview, Misc.getTextColor(), spad);
         
         TooltipMakerAPI btnInfo = info.beginSubTooltip(140f);
@@ -611,7 +668,6 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
     protected void renderMoraleAndFieldGuideTab(TooltipMakerAPI info, float width, float opad, float spad) {
         info.setTextWidthOverride(0f);
         info.setBulletedListMode(null);
-        info.setParaInsigniaLarge();
         info.addSectionHeading("Fleet Morale & Naval Field Guide", Alignment.MID, opad);
 
         // Section A: Current Fleet Morale & Shore Leave Status
@@ -909,7 +965,6 @@ public class OS_SpoonDirectoryIntel extends BaseIntelPlugin {
 
     private void addBullet(TooltipMakerAPI info, String text, float pad, Color highlightColor, String... highlights) {
         info.setTextWidthOverride(0f);
-        info.setParaInsigniaLarge();
         LabelAPI label = info.addPara(text, pad);
         if (highlights != null && highlights.length > 0) {
             label.setHighlight(highlights);

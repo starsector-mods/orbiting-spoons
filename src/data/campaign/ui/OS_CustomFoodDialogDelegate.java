@@ -366,7 +366,6 @@ public class OS_CustomFoodDialogDelegate extends BaseCustomDialogDelegate {
 
         TooltipMakerAPI main = panel.createUIElement(width, height, true);
         main.getPosition().inTL(0f, 0f);
-        main.setParaInsigniaLarge();
 
         // Header
         main.addSectionHeading("THE ORBITING SPOON: JURY-RIGGED DOMAIN CULINARY FABRICATOR", Alignment.MID, 0f);
@@ -446,7 +445,6 @@ public class OS_CustomFoodDialogDelegate extends BaseCustomDialogDelegate {
 
             // Card body with image + text - pass contentWidth so paragraph text strictly wraps
             TooltipMakerAPI card = main.beginImageWithText(opt.iconSprite, 48f, contentWidth, false);
-            card.setParaInsigniaLarge();
 
             card.addPara("Cost / Provisions: %s", 0f, Misc.getTextColor(), Misc.getHighlightColor(), opt.costString);
             card.addPara(opt.description, 3f);
