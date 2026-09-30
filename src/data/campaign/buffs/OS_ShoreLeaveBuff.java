@@ -12,6 +12,7 @@ import com.fs.starfarer.api.impl.campaign.ids.Stats;
 import com.fs.starfarer.api.ui.HintPanelAPI;
 import com.fs.starfarer.api.ui.LabelAPI;
 import com.fs.starfarer.api.util.Misc;
+import data.campaign.config.OS_ModConfig;
 
 public class OS_ShoreLeaveBuff implements EveryFrameScript {
 
@@ -315,7 +316,11 @@ public class OS_ShoreLeaveBuff implements EveryFrameScript {
         HintPanelAPI hintPanel = Global.getSector().getCampaignUI().getHintPanel();
         if (hintPanel != null && activeHintSlot >= 0) {
             if (hintPanel.hasHint(activeHintSlot)) {
-                hintPanel.fadeOutHint(activeHintSlot);
+                if (OS_ModConfig.isSmoothFadeOnExpiry()) {
+                    hintPanel.fadeOutHint(activeHintSlot);
+                } else {
+                    hintPanel.clearHints();
+                }
             }
         }
         activeHintSlot = -1;
@@ -330,6 +335,12 @@ public class OS_ShoreLeaveBuff implements EveryFrameScript {
         if (hintPanel == null) return;
 
         if (!isBuffActive()) {
+            clearCampaignHint();
+            return;
+        }
+
+        String hudStyle = OS_ModConfig.getHudStatusStyle();
+        if (OS_ModConfig.STYLE_OFF.equalsIgnoreCase(hudStyle)) {
             clearCampaignHint();
             return;
         }
@@ -352,15 +363,37 @@ public class OS_ShoreLeaveBuff implements EveryFrameScript {
         float remaining = getDaysRemaining();
         String daysStr = String.format("%.1f", remaining);
 
-        String meal = getMealName(faction);
-        String perks = getShortPerkSummary(faction);
-        String text = "Shore Leave (" + meal + "): " + daysStr + "d - " + perks;
-        String[] highlights = new String[]{meal, daysStr + "d", perks};
-        Color[] highlightColors = new Color[]{
-            Misc.getHighlightColor(),
-            Misc.getHighlightColor(),
-            Misc.getPositiveHighlightColor()
-        };
+        boolean warnLow = OS_ModConfig.isWarnLowDuration() && remaining < 1.0f;
+        Color durationColor = warnLow ? Misc.getNegativeHighlightColor() : Misc.getHighlightColor();
+
+        String text;
+        String[] highlights;
+        Color[] highlightColors;
+
+        if (OS_ModConfig.STYLE_MINIMAL.equalsIgnoreCase(hudStyle)) {
+            text = "Shore Leave: " + daysStr + "d";
+            highlights = new String[]{daysStr + "d"};
+            highlightColors = new Color[]{durationColor};
+        } else if (OS_ModConfig.STYLE_FULL.equalsIgnoreCase(hudStyle)) {
+            String meal = getMealName(faction);
+            String perks = getShortPerkSummary(faction);
+            text = "Shore Leave (" + meal + "): " + daysStr + "d - " + perks;
+            highlights = new String[]{meal, daysStr + "d", perks};
+            highlightColors = new Color[]{
+                Misc.getHighlightColor(),
+                durationColor,
+                Misc.getPositiveHighlightColor()
+            };
+        } else {
+            // Default "Compact": sleek 39 characters
+            text = "Shore Leave: " + daysStr + "d (-5% Upkeep, +5% CR)";
+            highlights = new String[]{daysStr + "d", "-5% Upkeep", "+5% CR"};
+            highlightColors = new Color[]{
+                durationColor,
+                Misc.getPositiveHighlightColor(),
+                Misc.getPositiveHighlightColor()
+            };
+        }
 
         if (!text.equals(lastHintText) || !hintPanel.hasHint(activeHintSlot)) {
             LabelAPI label = hintPanel.setHint(activeHintSlot, text, Misc.getBasePlayerColor());

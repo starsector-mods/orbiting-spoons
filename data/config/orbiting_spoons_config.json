@@ -1,0 +1,5 @@
+{
+    "hudStatusStyle": "Compact",
+    "warnLowDuration": true,
+    "smoothFadeOnExpiry": true
+}

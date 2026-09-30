@@ -45,6 +45,9 @@ public class OS_ModPlugin extends BaseModPlugin {
         // Sync buff state from save memory keys
         OS_ShoreLeaveBuff.syncOnLoad();
 
+        // Refresh mod settings (LunaLib or JSON config)
+        data.campaign.config.OS_ModConfig.refreshConfig();
+
         // Ensure the directory intel exists (adds if missing, safe if already present)
         OS_SpoonDirectoryIntel.addIntelIfNeeded();
     }

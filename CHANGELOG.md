@@ -2,6 +2,17 @@
 
 All notable changes to **The Orbiting Spoon** mod for Starsector will be documented in this file.
 
+## [1.1.1] - 2026-09-30
+
+### Added
+- **Native LunaLib & JSON Settings Support:** Added `LunaSettings.csv` and `orbiting_spoons_config.json` allowing players to configure HUD preferences directly from LunaLib's in-game settings menu or via JSON.
+
+### Changed
+- **Sleek Campaign Screen Status (Compact HUD Default):** Replaced the wide 114-character verbose status banner with a sleek, compact 39-character format (`Shore Leave: 13.4d (-5% Upkeep, +5% CR)`), reducing screen clutter by 65%.
+- **HUD Status Styles:** Added selectable display styles (`Compact`, `Minimal`, `Full`, `Off`) for player preference.
+- **Low Duration Warning:** Highlighted remaining duration in red/orange alert color when Shore Leave has under 24 hours remaining.
+- **Smooth Expiry Fade:** Added graceful HUD banner fading upon buff expiration.
+
 ## [1.1.0] - 2026-09-09
 
 ### Changed

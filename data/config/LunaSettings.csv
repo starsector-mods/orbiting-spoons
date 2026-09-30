@@ -1,0 +1,10 @@
+fieldID,fieldName,fieldType,defaultValue,secondaryValue,fieldDescription,minValue,maxValue,tab
+os_hudHeader,Campaign Screen HUD,Header,Campaign Screen HUD,,,,,Display
+os_hudStatusStyle,HUD Status Style,Radio,Compact,"Compact, Minimal, Full, Off","Controls the size and appearance of the Shore Leave status overlay on the campaign screen.
+
+Compact: Sleek 39-character summary showing remaining days, -5% Upkeep, and +5% CR.
+Minimal: Ultra-clean 18-character indicator with days remaining only.
+Full: Detailed legacy line showing regional meal name and all 5 stats.
+Off: Completely disables the campaign screen status overlay (Shore Leave remains fully active and viewable in the Fleet Log Intel directory).",,,Display
+os_warnLowDuration,Low Duration Alert Color,Boolean,true,,"Highlights the remaining time in red/orange when Shore Leave has less than 24 hours remaining.",,,Display
+os_smoothFadeOnExpiry,Smooth Fade On Expiry,Boolean,true,,"Gently fades out the HUD hint upon expiry rather than instantly disappearing.",,,Display
