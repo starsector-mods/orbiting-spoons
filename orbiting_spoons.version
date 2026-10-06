@@ -1,0 +1,10 @@
+{
+    "masterVersionFile": "https://raw.githubusercontent.com/starsector-mods/orbiting-spoons/master/orbiting_spoons.version",
+    "modName": "The Orbiting Spoon",
+    "modVersion":
+    {
+        "major": 1,
+        "minor": 1,
+        "patch": 1
+    }
+}
