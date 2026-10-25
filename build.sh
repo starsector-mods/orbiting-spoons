@@ -1,16 +1,31 @@
 #!/bin/bash
 set -e
 
-STARSECTOR_DIR="../../"
-MOD_DIR=$(pwd)
+cd "$(dirname "$0")"
 
-echo "Compiling Java sources..."
-rm -rf bin && mkdir -p bin
-mkdir -p jars
+STARSECTOR_CORE="../.."
+MODS_DIR=".."
 
-javac -encoding UTF-8 --release 17 -sourcepath src -d bin -cp "$STARSECTOR_DIR/*:$STARSECTOR_DIR/starfarer.api.jar:$STARSECTOR_DIR/mods/LazyLib/jars/*:$STARSECTOR_DIR/mods/GraphicsLib/jars/*:$STARSECTOR_DIR/mods/MagicLib/jars/*:$STARSECTOR_DIR/mods/Nexerelin/jars/*:$STARSECTOR_DIR/mods/LunaLib/jars/*" $(find src/ -name "*.java")
+CLASSPATH=""
+for jar in "$STARSECTOR_CORE"/*.jar; do
+    [ -f "$jar" ] && CLASSPATH="${CLASSPATH:+$CLASSPATH:}$jar"
+done
+for jar in \
+    "$MODS_DIR"/LazyLib*/jars/*.jar \
+    "$MODS_DIR"/LazyLib*/jars/internal/*.jar \
+    "$MODS_DIR"/MagicLib*/jars/*.jar \
+    "$MODS_DIR"/*GraphicsLib*/jars/*.jar \
+    "$MODS_DIR"/Nexerelin*/jars/*.jar \
+    "$MODS_DIR"/LunaLib*/jars/*.jar; do
+    [ -f "$jar" ] && CLASSPATH="$CLASSPATH:$jar"
+done
 
-echo "Packaging JAR..."
-jar cf jars/orbiting_spoons.jar -C bin data
+rm -rf bin sources.txt
+mkdir -p bin jars
+find src -name "*.java" | sort > sources.txt
+
+javac -encoding UTF-8 -Xlint:-options --release 17 -sourcepath "" -implicit:none -cp "$CLASSPATH" -d bin @sources.txt
+jar cf jars/orbiting_spoons.jar -C bin .
+rm -rf bin sources.txt
 
 echo "Build complete! Output: jars/orbiting_spoons.jar"
